@@ -1,0 +1,263 @@
+/**
+ * KagamiExperience — The Mirror of Infinite Reflection
+ *
+ * 鏡 (Kagami) — "In the mirror, we see not what is, but what could be."
+ *
+ * This is the main entry point for the Kagami WebXR experience,
+ * orchestrating eight chapters of immersive reflection inspired by
+ * Yayoi Kusama's infinity mirror installations.
+ *
+ * @author Kristi Jacoby <kristi.jacoby@canyons.edu>
+ * @license MIT
+ *
+ * Craft Level: Transcendent
+ * Theme: Hallows and Colonies
+ */
+
+import * as THREE from 'three';
+
+// Fibonacci timing sequence — mathematics underlies aesthetics
+const FIBONACCI_MS = [89, 144, 233, 377, 610, 987] as const;
+
+// Performance configuration — every pixel matters
+const PERF = {
+  maxOrbs: 80,
+  maxLights: 7,
+  cubeUpdateRate: 30,
+  sphereSegments: 16,
+  enableGlow: true,
+} as const;
+
+// Colony colors from the Hallows and Colonies theme
+const COLONY_COLORS = {
+  void: '#D4A853',      // Gold — The origin
+  spark: '#FF7043',     // Creativity
+  forge: '#FFB74D',     // Implementation
+  flow: '#4DD0E1',      // Debugging
+  nexus: '#B388FF',     // Integration
+  beacon: '#FFE0B2',    // Architecture
+  grove: '#81C784',     // Research
+  crystal: '#4FC3F7',   // Testing
+} as const;
+
+// Chapter definitions — the eight stages of the journey
+interface ChapterConfig {
+  id: number;
+  name: string;
+  particles: number;
+  colony: keyof typeof COLONY_COLORS;
+  description: string;
+}
+
+const CHAPTERS: ChapterConfig[] = [
+  { id: 1, name: 'The Void', particles: 60, colony: 'void', description: 'Origin — seven colonies + 60 polka dots' },
+  { id: 2, name: 'Ignition', particles: 50, colony: 'spark', description: 'Explosive spark particles of creativity' },
+  { id: 3, name: 'The Anvil', particles: 40, colony: 'forge', description: 'Molten droplets with upward motion' },
+  { id: 4, name: 'Currents', particles: 45, colony: 'flow', description: '3 spiraling debugging streams' },
+  { id: 5, name: 'The Web', particles: 12, colony: 'nexus', description: 'Network nodes + connection particles' },
+  { id: 6, name: 'Lighthouse', particles: 48, colony: 'beacon', description: 'Central beacon + 8 rays' },
+  { id: 7, name: 'The Grove', particles: 50, colony: 'grove', description: 'Branching tree structures' },
+  { id: 8, name: 'Crystallization', particles: 43, colony: 'crystal', description: 'Octahedron geometry' },
+];
+
+/**
+ * Main Kagami Experience class
+ *
+ * Initializes the WebXR environment and manages the eight-chapter journey.
+ * Designed with accessibility in mind — provides fallbacks for non-VR users.
+ */
+export class KagamiExperience {
+  private scene: THREE.Scene;
+  private camera: THREE.PerspectiveCamera;
+  private renderer: THREE.WebGLRenderer;
+  private currentChapter: number = 0;
+  private phase: number = 0;
+  private xrSession: XRSession | null = null;
+
+  // Accessibility: respect motion preferences
+  private readonly prefersReducedMotion: boolean;
+
+  constructor(container: HTMLElement) {
+    // Check motion preferences for accessibility
+    this.prefersReducedMotion =
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Initialize Three.js scene
+    this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color(0x07060B); // Void color
+
+    // Camera with 80° FOV for immersive viewing
+    this.camera = new THREE.PerspectiveCamera(
+      80,
+      container.clientWidth / container.clientHeight,
+      0.1,
+      1000
+    );
+    this.camera.position.set(0, 1.6, 0); // Standing height
+
+    // WebGL renderer with optimal settings
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: false,
+    });
+    this.renderer.setSize(container.clientWidth, container.clientHeight);
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    this.renderer.xr.enabled = true;
+
+    container.appendChild(this.renderer.domElement);
+
+    // Set up hidden window object for transcendent discovery
+    this.setupTranscendentLayer();
+
+    // Announce to screen readers
+    this.announceToScreenReader('Kagami experience loaded. Press Enter to begin.');
+  }
+
+  /**
+   * Initialize WebXR session with graceful fallback
+   */
+  async initWebXR(): Promise<boolean> {
+    if (!navigator.xr) {
+      console.warn('[Kagami] WebXR not supported, using desktop mode');
+      return false;
+    }
+
+    try {
+      const supported = await navigator.xr.isSessionSupported('immersive-vr');
+      if (!supported) {
+        console.warn('[Kagami] Immersive VR not supported');
+        return false;
+      }
+
+      this.xrSession = await navigator.xr.requestSession('immersive-vr', {
+        optionalFeatures: ['local-floor', 'hand-tracking'],
+      });
+
+      await this.renderer.xr.setSession(this.xrSession);
+
+      this.xrSession.addEventListener('end', () => {
+        this.xrSession = null;
+        this.announceToScreenReader('VR session ended');
+      });
+
+      this.announceToScreenReader('Entering VR mode');
+      return true;
+    } catch (error) {
+      if ((error as DOMException).name === 'NotAllowedError') {
+        console.warn('[Kagami] XR permission denied');
+      }
+      return false;
+    }
+  }
+
+  /**
+   * Navigate to a specific chapter
+   */
+  goToChapter(chapterIndex: number): void {
+    if (chapterIndex < 0 || chapterIndex >= CHAPTERS.length) return;
+
+    this.currentChapter = chapterIndex;
+    const chapter = CHAPTERS[chapterIndex];
+
+    // Announce chapter change for accessibility
+    this.announceToScreenReader(
+      `Chapter ${chapter.id}: ${chapter.name}. ${chapter.description}`
+    );
+
+    // TODO: Implement chapter transition with appropriate colony particles
+    console.log(`[Kagami] Entering ${chapter.name} (${chapter.colony} colony)`);
+  }
+
+  /**
+   * Main animation loop with breathing effect
+   */
+  animate(): void {
+    this.renderer.setAnimationLoop((time) => {
+      // Global breathing phase (0.5 to 1.5 scale)
+      if (!this.prefersReducedMotion) {
+        this.phase = 0.5 + 0.5 * (1 + Math.sin(time * 0.001));
+      } else {
+        this.phase = 1; // Static for reduced motion
+      }
+
+      // Update particles and scene
+      this.update(time);
+
+      // Render
+      this.renderer.render(this.scene, this.camera);
+    });
+  }
+
+  /**
+   * Update scene state each frame
+   */
+  private update(time: number): void {
+    // Frame-based updates will go here
+    // Keep under 16.67ms for 60fps VR target
+  }
+
+  /**
+   * Announce messages to screen readers
+   */
+  private announceToScreenReader(message: string): void {
+    const announcement = document.createElement('div');
+    announcement.setAttribute('role', 'status');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.setAttribute('aria-atomic', 'true');
+    announcement.className = 'sr-only';
+    announcement.textContent = message;
+    document.body.appendChild(announcement);
+
+    // Remove after announcement is read
+    setTimeout(() => announcement.remove(), FIBONACCI_MS[4]); // 610ms
+  }
+
+  /**
+   * Set up the transcendent discovery layer
+   *
+   * Hidden window object for those who explore deeply.
+   * "Discovery rewards exploration"
+   */
+  private setupTranscendentLayer(): void {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).鏡 = {
+      // The mirror reveals itself to those who seek
+      chapters: CHAPTERS.map(c => c.name),
+      colonies: Object.keys(COLONY_COLORS),
+      axioms: [
+        'Every pixel matters',
+        'Motion conveys meaning',
+        'Discovery rewards exploration',
+        'Layers hide depth',
+        'Mathematics underlies aesthetics',
+      ],
+      fibonacci: FIBONACCI_MS,
+
+      // A gift for the curious
+      reflect: () => {
+        console.log('%c🪞 Kagami — The Mirror of Infinite Reflection',
+          'font-size: 20px; color: #D4A853; font-family: Cinzel, serif;');
+        console.log('%cYou found the hidden mirror. The journey rewards exploration.',
+          'color: #F5E6C8; font-style: italic;');
+        return 'h(x) ≥ 0 — Always';
+      },
+    };
+  }
+
+  /**
+   * Clean up resources
+   */
+  dispose(): void {
+    this.renderer.setAnimationLoop(null);
+    this.renderer.dispose();
+    if (this.xrSession) {
+      this.xrSession.end();
+    }
+  }
+}
+
+// Export chapter configs for use by other modules
+export { CHAPTERS, COLONY_COLORS, FIBONACCI_MS, PERF };
+export type { ChapterConfig };

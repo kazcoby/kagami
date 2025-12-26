@@ -1,0 +1,71 @@
+{
+  "name": "kagami",
+  "version": "1.0.0",
+  "description": "WebXR immersive experience framework — Eight chapters of reflection and wholeness",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "test:a11y": "vitest --config vitest.a11y.config.ts",
+    "lint": "eslint src --ext .ts,.tsx",
+    "format": "prettier --write src/**/*.{ts,tsx,json}",
+    "type-check": "tsc --noEmit",
+    "craft:verify": "node scripts/verify-craft.js"
+  },
+  "dependencies": {
+    "three": "^0.167.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.167.0",
+    "typescript": "^5.3.0",
+    "vite": "^5.4.0",
+    "vitest": "^2.0.0",
+    "@vitest/coverage-v8": "^2.0.0",
+    "eslint": "^9.0.0",
+    "prettier": "^3.3.0",
+    "axe-core": "^4.9.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "author": "Kristi Jacoby <kristi.jacoby@canyons.edu>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/awktavian/kagami.git"
+  },
+  "keywords": [
+    "webxr",
+    "vr",
+    "ar",
+    "three.js",
+    "immersive",
+    "accessibility",
+    "education"
+  ],
+  "kagami": {
+    "theme": "hallows-and-colonies",
+    "craft": {
+      "level": "transcendent",
+      "axioms": [
+        "Every pixel matters",
+        "Motion conveys meaning",
+        "Discovery rewards exploration",
+        "Layers hide depth",
+        "Mathematics underlies aesthetics"
+      ]
+    },
+    "colonies": {
+      "spark": "Creativity",
+      "forge": "Implementation",
+      "flow": "Debugging",
+      "nexus": "Integration",
+      "beacon": "Architecture",
+      "grove": "Research",
+      "crystal": "Testing"
+    }
+  }
+}

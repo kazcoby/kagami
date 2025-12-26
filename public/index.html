@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kagami — A WebXR immersive experience inspired by infinity mirrors. Eight chapters of reflection and wholeness.">
+
+  <!-- Accessibility: Theme color for VR browsers -->
+  <meta name="theme-color" content="#07060B">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Kagami — Mirror of Infinite Reflection">
+  <meta property="og:description" content="Eight chapters exploring themes of reflection and wholeness through immersive WebXR.">
+  <meta property="og:type" content="website">
+
+  <title>Kagami — 鏡</title>
+
+  <!-- Hallows and Colonies Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* Essential: CSS Custom Properties from Hallows and Colonies theme */
+    :root {
+      /* Primary Colors */
+      --color-gold: #D4A853;
+      --color-gold-bright: #FFD93D;
+      --color-gold-dim: rgba(212, 168, 83, 0.5);
+
+      /* Void Colors */
+      --color-void: #07060B;
+      --color-void-purple: #0E0C14;
+      --color-void-warm: #110B08;
+
+      /* Parchment */
+      --color-parchment: #F5E6C8;
+      --color-parchment-dark: #D4C4A8;
+
+      /* Colony Colors */
+      --color-spark: #FF7043;
+      --color-forge: #FFB74D;
+      --color-flow: #4DD0E1;
+      --color-nexus: #B388FF;
+      --color-beacon: #FFE0B2;
+      --color-grove: #81C784;
+      --color-crystal: #4FC3F7;
+
+      /* Typography */
+      --font-display: 'Cinzel', 'Palatino Linotype', serif;
+      --font-body: 'Crimson Pro', 'Georgia', serif;
+      --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+
+      /* Spacing (8px base) */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 2rem;
+      --space-xl: 4rem;
+
+      /* Animation - Fibonacci timing */
+      --duration-1: 89ms;
+      --duration-2: 144ms;
+      --duration-3: 233ms;
+      --duration-4: 377ms;
+      --duration-5: 610ms;
+      --duration-6: 987ms;
+
+      /* Easing - Catastrophe theory names */
+      --ease-fold: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-cusp: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+      /* Glass effect */
+      --glass-bg: rgba(15, 12, 20, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Reset with accessibility in mind */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    * {
+      margin: 0;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: var(--color-void);
+      color: var(--color-parchment);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Accessibility: Screen reader only class */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Main container */
+    #kagami-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Essential: Loading screen with breathing animation */
+    #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-void);
+      z-index: 1000;
+      transition: opacity var(--duration-5) var(--ease-fold);
+    }
+
+    #loading.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #loading h1 {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      color: var(--color-gold);
+      /* Essential: Shimmer animation */
+      background: linear-gradient(
+        90deg,
+        var(--color-gold) 0%,
+        var(--color-gold-bright) 50%,
+        var(--color-gold) 100%
+      );
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer var(--duration-6) linear infinite;
+    }
+
+    @keyframes shimmer {
+      from { background-position: 200% center; }
+      to { background-position: -200% center; }
+    }
+
+    #loading p {
+      margin-top: var(--space-md);
+      font-style: italic;
+      color: var(--color-parchment-dark);
+      /* Essential: Breathing animation */
+      animation: breathe 3s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.02); }
+    }
+
+    /* Skip to content link for accessibility */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: var(--color-gold);
+      color: var(--color-void);
+      padding: var(--space-sm) var(--space-md);
+      z-index: 9999;
+      font-family: var(--font-body);
+      text-decoration: none;
+      transition: top var(--duration-3) var(--ease-fold);
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* VR button */
+    #vr-button {
+      position: fixed;
+      bottom: var(--space-lg);
+      right: var(--space-lg);
+      padding: var(--space-sm) var(--space-lg);
+      font-family: var(--font-display);
+      font-size: 1rem;
+      color: var(--color-void);
+      background: var(--color-gold);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform var(--duration-3) var(--ease-cusp),
+                  box-shadow var(--duration-3) var(--ease-fold);
+      z-index: 100;
+    }
+
+    #vr-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px var(--color-gold-dim);
+    }
+
+    #vr-button:focus-visible {
+      outline: 2px solid var(--color-parchment);
+      outline-offset: 2px;
+    }
+
+    #vr-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Chapter navigation */
+    #chapter-nav {
+      position: fixed;
+      left: var(--space-lg);
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      z-index: 100;
+    }
+
+    .chapter-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--color-parchment-dark);
+      background: transparent;
+      cursor: pointer;
+      transition: all var(--duration-3) var(--ease-fold);
+    }
+
+    .chapter-dot:hover,
+    .chapter-dot:focus-visible {
+      border-color: var(--color-gold);
+      transform: scale(1.2);
+    }
+
+    .chapter-dot.active {
+      background: var(--color-gold);
+      border-color: var(--color-gold);
+    }
+
+    .chapter-dot:focus-visible {
+      outline: 2px solid var(--color-parchment);
+      outline-offset: 2px;
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Accessibility: Skip link -->
+  <a href="#kagami-container" class="skip-link">Skip to experience</a>
+
+  <!-- Loading screen -->
+  <div id="loading" role="status" aria-label="Loading Kagami experience">
+    <h1>鏡</h1>
+    <p>Entering the mirror...</p>
+  </div>
+
+  <!-- Main WebXR container -->
+  <main id="kagami-container" tabindex="-1" aria-label="Kagami WebXR experience">
+    <!-- Three.js canvas will be inserted here -->
+  </main>
+
+  <!-- Chapter navigation (Essential: scroll-reveal will animate these in) -->
+  <nav id="chapter-nav" aria-label="Chapter navigation">
+    <button class="chapter-dot active" data-chapter="0" aria-label="Chapter 1: The Void" aria-current="true"></button>
+    <button class="chapter-dot" data-chapter="1" aria-label="Chapter 2: Ignition"></button>
+    <button class="chapter-dot" data-chapter="2" aria-label="Chapter 3: The Anvil"></button>
+    <button class="chapter-dot" data-chapter="3" aria-label="Chapter 4: Currents"></button>
+    <button class="chapter-dot" data-chapter="4" aria-label="Chapter 5: The Web"></button>
+    <button class="chapter-dot" data-chapter="5" aria-label="Chapter 6: Lighthouse"></button>
+    <button class="chapter-dot" data-chapter="6" aria-label="Chapter 7: The Grove"></button>
+    <button class="chapter-dot" data-chapter="7" aria-label="Chapter 8: Crystallization"></button>
+  </nav>
+
+  <!-- VR button -->
+  <button id="vr-button" aria-label="Enter VR mode">Enter VR</button>
+
+  <!-- Module script -->
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

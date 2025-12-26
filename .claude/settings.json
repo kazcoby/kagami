@@ -1,0 +1,50 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm:*)",
+      "Bash(npx:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git diff:*)",
+      "Bash(git status:*)",
+      "Bash(git branch:*)",
+      "Bash(gh:*)",
+      "Read(./src/**)",
+      "Read(./public/**)",
+      "Read(./*.json)",
+      "Read(./*.md)",
+      "Read(./docs/**)",
+      "Read(./.claude/**)",
+      "Edit(./src/**)",
+      "Edit(./public/**)",
+      "Edit(./*.json)",
+      "Edit(./*.md)",
+      "WebFetch(domain:awktavian.github.io)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:developer.mozilla.org)",
+      "WebFetch(domain:threejs.org)",
+      "WebFetch(domain:immersive-web.github.io)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Read(./.git/**)",
+      "Read(./node_modules/**)",
+      "Bash(curl:*)",
+      "Bash(wget:*)"
+    ]
+  },
+  "env": {
+    "NODE_ENV": "development",
+    "KAGAMI_DEBUG": "true",
+    "THEME": "hallows-and-colonies",
+    "CRAFT_LEVEL": "transcendent"
+  },
+  "model": "claude-opus-4-5-20251101",
+  "attribution": {
+    "commit": "✨ Generated with Claude Code\n\n🪞 Kagami • Hallows & Colonies Edition\nCo-Authored-By: Claude <noreply@anthropic.com>",
+    "pr": "🪞 Generated with Claude Code — Kagami Framework"
+  }
+}
