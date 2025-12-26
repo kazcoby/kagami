@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "mcpServers": {
+
+    "gmail": {
+      "command": "npx",
+      "args": ["-y", "@gongrzhe/server-gmail-autoauth-mcp"],
+      "env": {},
+      "description": "Read, send, search emails. Manage labels and filters. Batch operations."
+    },
+
+    "google-calendar": {
+      "command": "npx",
+      "args": ["-y", "@nspady/google-calendar-mcp"],
+      "env": {},
+      "description": "Manage calendars, schedule meetings, find free time, smart scheduling."
+    },
+
+    "google-drive": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/server-gdrive"],
+      "env": {},
+      "description": "Search, read, create, organize files in Google Drive."
+    },
+
+    "canvas-lms": {
+      "command": "npx",
+      "args": ["-y", "canvas-mcp-server"],
+      "env": {
+        "CANVAS_API_TOKEN": "${CANVAS_API_TOKEN}",
+        "CANVAS_DOMAIN": "${CANVAS_DOMAIN}"
+      },
+      "description": "Manage Canvas courses, assignments, grades, enrollments. 54 tools available."
+    },
+
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@notionhq/notion-mcp-server"],
+      "env": {
+        "NOTION_TOKEN": "${NOTION_TOKEN}"
+      },
+      "description": "Search, read, create Notion pages and databases."
+    },
+
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-slack"],
+      "env": {
+        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}"
+      },
+      "description": "Read channels, post messages, search Slack workspace."
+    },
+
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/kristijacoby/Documents", "/Users/kristijacoby/Desktop"],
+      "env": {},
+      "description": "Read and write local files in Documents and Desktop folders."
+    },
+
+    "youtube-transcript": {
+      "command": "npx",
+      "args": ["-y", "@kimtaeyoon83/mcp-server-youtube-transcript"],
+      "env": {},
+      "description": "Extract transcripts from YouTube videos for educational content."
+    },
+
+    "apple-notes": {
+      "command": "npx",
+      "args": ["-y", "@packetnomad/apple-notes-mcp"],
+      "env": {},
+      "description": "Search, read, create Apple Notes (macOS only)."
+    },
+
+    "apple-reminders": {
+      "command": "bunx",
+      "args": ["@anthropic/mcp-server-apple-reminders"],
+      "env": {},
+      "description": "Manage Apple Reminders lists and tasks (macOS only)."
+    },
+
+    "fetch": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-fetch"],
+      "env": {},
+      "description": "Fetch and read web content, convert to markdown."
+    },
+
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "env": {},
+      "description": "Persistent memory for remembering context across conversations."
+    }
+  }
+}
