@@ -11,14 +11,14 @@
 
     "google-calendar": {
       "command": "npx",
-      "args": ["-y", "@nspady/google-calendar-mcp"],
+      "args": ["-y", "@sudomcp/google-calendar-mcp"],
       "env": {},
       "description": "Manage calendars, schedule meetings, find free time, smart scheduling."
     },
 
     "google-drive": {
       "command": "npx",
-      "args": ["-y", "@anthropic/server-gdrive"],
+      "args": ["-y", "@modelcontextprotocol/server-gdrive"],
       "env": {},
       "description": "Search, read, create, organize files in Google Drive."
     },
@@ -65,24 +65,19 @@
       "description": "Extract transcripts from YouTube videos for educational content."
     },
 
-    "apple-notes": {
+    "apple-mcp": {
       "command": "npx",
-      "args": ["-y", "@packetnomad/apple-notes-mcp"],
+      "args": ["-y", "@rudrasankha/apple-mcp"],
       "env": {},
-      "description": "Search, read, create Apple Notes (macOS only)."
-    },
-
-    "apple-reminders": {
-      "command": "bunx",
-      "args": ["@anthropic/mcp-server-apple-reminders"],
-      "env": {},
-      "description": "Manage Apple Reminders lists and tasks (macOS only)."
+      "description": "Search, read, create Apple Notes and manage Reminders (macOS only)."
     },
 
     "fetch": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-fetch"],
-      "env": {},
+      "command": "uvx",
+      "args": ["mcp-server-fetch"],
+      "env": {
+        "PYTHONIOENCODING": "utf-8"
+      },
       "description": "Fetch and read web content, convert to markdown."
     },
 
