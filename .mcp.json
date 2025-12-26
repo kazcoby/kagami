@@ -3,8 +3,8 @@
   "mcpServers": {
 
     "gmail": {
-      "command": "npx",
-      "args": ["-y", "@gongrzhe/server-gmail-autoauth-mcp"],
+      "command": "/opt/homebrew/bin/gmail-mcp",
+      "args": [],
       "env": {},
       "description": "Read, send, search emails. Manage labels and filters. Batch operations."
     },
