@@ -10,15 +10,17 @@
     },
 
     "google-calendar": {
-      "command": "npx",
-      "args": ["-y", "@sudomcp/google-calendar-mcp"],
-      "env": {},
+      "command": "/opt/homebrew/bin/google-calendar-mcp",
+      "args": [],
+      "env": {
+        "GOOGLE_OAUTH_CREDENTIALS": "/Users/kristijacoby/.config/google-calendar-mcp/gcp-oauth.keys.json"
+      },
       "description": "Manage calendars, schedule meetings, find free time, smart scheduling."
     },
 
     "google-drive": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-gdrive"],
+      "command": "/opt/homebrew/bin/mcp-server-gdrive",
+      "args": [],
       "env": {},
       "description": "Search, read, create, organize files in Google Drive."
     },
@@ -42,15 +44,6 @@
       "description": "Search, read, create Notion pages and databases."
     },
 
-    "slack": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-slack"],
-      "env": {
-        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}"
-      },
-      "description": "Read channels, post messages, search Slack workspace."
-    },
-
     "filesystem": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/kristijacoby/Documents", "/Users/kristijacoby/Desktop"],
@@ -63,13 +56,6 @@
       "args": ["-y", "@kimtaeyoon83/mcp-server-youtube-transcript"],
       "env": {},
       "description": "Extract transcripts from YouTube videos for educational content."
-    },
-
-    "apple-mcp": {
-      "command": "npx",
-      "args": ["-y", "@rudrasankha/apple-mcp"],
-      "env": {},
-      "description": "Search, read, create Apple Notes and manage Reminders (macOS only)."
     },
 
     "fetch": {
