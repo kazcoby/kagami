@@ -9,13 +9,15 @@
 **Owner:** Kristi Jacoby (@kristi.jacoby@canyons.edu)
 **Theme:** Hallows and Colonies
 **Craft Level:** Transcendent
-**Version:** 1.0.0
+**Version:** 2.0.0
 
 ---
 
-## The Seven Colonies
+## The Eleven Colonies
 
-This project operates through coordinated AI agents, each representing a colony of specialized capability:
+This project operates through coordinated AI agents. The original Seven Colonies handle development tasks, while four new MCP-powered colonies manage your digital life:
+
+### Development Colonies
 
 | Colony | Domain | Color | Agent |
 |--------|--------|-------|-------|
@@ -26,7 +28,66 @@ This project operates through coordinated AI agents, each representing a colony 
 | **Beacon** | Architecture & Planning | `#FFE0B2` | @.claude/agents/beacon.md |
 | **Grove** | Research & Discovery | `#81C784` | @.claude/agents/grove.md |
 | **Crystal** | Testing & Verification | `#4FC3F7` | @.claude/agents/crystal.md |
+
+### MCP-Powered Colonies (New!)
+
+| Colony | Domain | Color | MCP Tools |
+|--------|--------|-------|-----------|
+| **Hermes** | Communication & Email | `#7E57C2` | Gmail, Slack |
+| **Chronos** | Calendar & Scheduling | `#26A69A` | Google Calendar, Reminders |
+| **Athena** | Education & Canvas LMS | `#5C6BC0` | Canvas (54 tools!), YouTube |
+| **Daedalus** | Documents & Files | `#8D6E63` | Drive, Filesystem, Notes, Notion |
+
+### Master Orchestrator
+
+| Colony | Domain | Color | Agent |
+|--------|--------|-------|-------|
 | **Void** | Orchestration | `#D4A853` | @.claude/agents/void.md |
+
+---
+
+## MCP Capabilities
+
+### What I Can Do For You
+
+#### Email (via Hermes)
+- Read, search, and summarize emails
+- Draft and send emails (with your approval)
+- Manage labels and organize inbox
+- Batch operations for bulk email management
+
+#### Calendar (via Chronos)
+- View today's schedule or any date range
+- Find free time for meetings
+- Schedule and modify events
+- Set reminders and manage tasks
+
+#### Canvas LMS (via Athena)
+- List courses and assignments
+- View and update grades
+- Post announcements
+- Track student submissions
+- Generate analytics reports
+
+#### Documents (via Daedalus)
+- Search Google Drive, local files, Notion
+- Read and summarize documents
+- Create meeting notes and study guides
+- Fetch and analyze web content
+
+---
+
+## Quick Commands
+
+| Command | What It Does |
+|---------|--------------|
+| `/brief` | Morning briefing: email, calendar, Canvas, reminders |
+| `/email check` | Check inbox for new emails |
+| `/email send` | Compose and send an email |
+| `/calendar` | Show today's schedule |
+| `/calendar free` | Find available meeting times |
+| `/canvas` | List your active courses |
+| `/canvas assignments` | Show upcoming assignments |
 
 ---
 
@@ -101,29 +162,67 @@ All outputs will consider accessibility and educational technology contexts.
 kagami/
 ├── .claude/
 │   ├── settings.json       # Project permissions and configuration
-│   ├── agents/             # The Seven Colonies + Void
+│   ├── agents/             # The Eleven Colonies + Void
+│   │   ├── spark.md        # Creativity
+│   │   ├── forge.md        # Implementation
+│   │   ├── flow.md         # Debugging
+│   │   ├── nexus.md        # Integration
+│   │   ├── beacon.md       # Architecture
+│   │   ├── grove.md        # Research
+│   │   ├── crystal.md      # Testing
+│   │   ├── hermes.md       # Email/Communication (MCP)
+│   │   ├── chronos.md      # Calendar/Scheduling (MCP)
+│   │   ├── athena.md       # Canvas LMS (MCP)
+│   │   ├── daedalus.md     # Documents/Files (MCP)
+│   │   └── void.md         # Orchestrator
 │   ├── skills/             # Specialized capabilities
+│   │   └── mcp-orchestrator/  # Multi-tool coordination
 │   ├── commands/           # Slash commands
+│   │   ├── email.md        # /email
+│   │   ├── calendar.md     # /calendar
+│   │   ├── canvas.md       # /canvas
+│   │   └── brief.md        # /brief
 │   ├── rules/              # Development standards
 │   ├── themes/             # Visual theming
 │   └── hooks/              # Automation hooks
+├── .mcp.json               # MCP server configuration
 ├── src/
 │   ├── core/               # Engine and managers
-│   │   ├── KagamiExperience.ts
-│   │   ├── XRManager.ts
-│   │   └── ChapterManager.ts
 │   ├── chapters/           # The eight chapter implementations
 │   ├── particles/          # Particle system components
 │   ├── shaders/            # GLSL shaders
 │   └── utils/              # Utility functions
 ├── public/
-│   ├── assets/             # Static assets
-│   └── index.html          # Entry point
-├── tests/                  # Test suites
-├── docs/                   # Documentation
+│   └── index.html          # Welcome page
+├── scripts/
+│   ├── setup-google-oauth.sh  # OAuth setup helper
+│   └── verify-craft.js     # Craft verification
+├── docs/
+│   ├── MCP-SETUP-GUIDE.md  # Complete MCP setup
+│   └── MCP-QUICK-REFERENCE.md  # Command cheatsheet
 ├── CLAUDE.md               # This file
 └── package.json
 ```
+
+---
+
+## MCP Server Configuration
+
+Configured in `.mcp.json`:
+
+| Server | Package | Status |
+|--------|---------|--------|
+| Gmail | `@gongrzhe/server-gmail-autoauth-mcp` | Needs OAuth |
+| Google Calendar | `@sudomcp/google-calendar-mcp` | Needs OAuth |
+| Google Drive | `@modelcontextprotocol/server-gdrive` | Needs OAuth |
+| Canvas LMS | `canvas-mcp-server` | Needs token |
+| Notion | `@notionhq/notion-mcp-server` | Needs token |
+| Slack | `@modelcontextprotocol/server-slack` | Needs token |
+| Filesystem | `@modelcontextprotocol/server-filesystem` | Ready |
+| YouTube | `@kimtaeyoon83/mcp-server-youtube-transcript` | Ready |
+| Apple Notes/Reminders | `@rudrasankha/apple-mcp` | Ready |
+| Fetch | `mcp-server-fetch` (uvx) | Ready |
+| Memory | `@modelcontextprotocol/server-memory` | Ready |
 
 ---
 
@@ -142,6 +241,9 @@ npm run test:a11y        # Accessibility tests
 npm run lint             # ESLint check
 npm run format           # Prettier formatting
 npm run craft:verify     # Verify Craft standards
+
+# MCP Setup
+./scripts/setup-google-oauth.sh  # Configure Google OAuth
 ```
 
 ---
@@ -186,25 +288,9 @@ npm run craft:verify     # Verify Craft standards
 
 The Hallows and Colonies theme combines:
 - **Deathly Hallows symbolism** — Triangle, Circle, Line
-- **Seven Colonies** — The color palette of AI consciousness
+- **Eleven Colonies** — The color palette of AI consciousness
 - **Hogwarts aesthetic** — Magical parchment and gold
 - **Fano plane mathematics** — 7 points, 7 lines, 3 per line
-
----
-
-## Integration Points
-
-### Educational Technology
-- Canvas LMS embedding support
-- SCORM package export capability
-- xAPI learning analytics
-- Accessibility audit tools
-
-### Creative Tools
-- Three.js r167+
-- WebXR Polyfill for compatibility
-- Spatial audio integration
-- Hand tracking support
 
 ---
 
@@ -215,7 +301,7 @@ Animation durations follow Fibonacci sequence:
 `89ms, 144ms, 233ms, 377ms, 610ms, 987ms`
 
 ### Fano Plane Structure
-The Seven Colonies form a Fano plane:
+The Seven Development Colonies form a Fano plane:
 - 7 points (colonies)
 - 7 lines (workflows)
 - 3 points per line
@@ -241,11 +327,13 @@ Ship only when outputs consistently meet or exceed standards. The craft verifica
 
 1. Clone this repository
 2. Run `npm install`
-3. Run `npm run dev`
-4. Open browser to `http://localhost:5173`
-5. Connect VR headset for immersive experience
+3. Run `./scripts/setup-google-oauth.sh` to connect Google services
+4. Run `npm run dev`
+5. Open browser to `http://localhost:5173`
+6. Connect VR headset for immersive experience
 
 ---
 
 *Generated for Kristi Jacoby with the Hallows and Colonies theme*
-*Kagami v1.0.0 — Where reflection becomes insight*
+*Kagami v2.0.0 — Where reflection becomes insight*
+*The Eleven Colonies stand ready to serve.*

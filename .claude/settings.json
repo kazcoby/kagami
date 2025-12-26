@@ -3,6 +3,8 @@
     "allow": [
       "Bash(npm:*)",
       "Bash(npx:*)",
+      "Bash(uvx:*)",
+      "Bash(gcloud:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
@@ -10,30 +12,37 @@
       "Bash(git status:*)",
       "Bash(git branch:*)",
       "Bash(gh:*)",
+      "Bash(open:*)",
+      "Bash(brew:*)",
       "Read(./src/**)",
       "Read(./public/**)",
       "Read(./*.json)",
       "Read(./*.md)",
       "Read(./docs/**)",
+      "Read(./scripts/**)",
       "Read(./.claude/**)",
       "Edit(./src/**)",
       "Edit(./public/**)",
       "Edit(./*.json)",
       "Edit(./*.md)",
+      "Edit(./docs/**)",
+      "Edit(./scripts/**)",
+      "Edit(./.claude/**)",
       "WebFetch(domain:awktavian.github.io)",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:developer.mozilla.org)",
       "WebFetch(domain:threejs.org)",
-      "WebFetch(domain:immersive-web.github.io)"
+      "WebFetch(domain:immersive-web.github.io)",
+      "WebFetch(domain:console.cloud.google.com)",
+      "WebFetch(domain:canyons.instructure.com)",
+      "WebFetch(domain:npmjs.com)"
     ],
     "deny": [
       "Read(./.env)",
       "Read(./.env.*)",
       "Read(./secrets/**)",
       "Read(./.git/**)",
-      "Read(./node_modules/**)",
-      "Bash(curl:*)",
-      "Bash(wget:*)"
+      "Read(./node_modules/**)"
     ]
   },
   "env": {
