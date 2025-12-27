@@ -212,17 +212,23 @@ Configured in `.mcp.json`:
 
 | Server | Package | Status |
 |--------|---------|--------|
-| Gmail | `@gongrzhe/server-gmail-autoauth-mcp` | Needs OAuth |
-| Google Calendar | `@sudomcp/google-calendar-mcp` | Needs OAuth |
-| Google Drive | `@modelcontextprotocol/server-gdrive` | Needs OAuth |
-| Canvas LMS | `canvas-mcp-server` | Needs token |
-| Notion | `@notionhq/notion-mcp-server` | Needs token |
-| Slack | `@modelcontextprotocol/server-slack` | Needs token |
+| Gmail | `/opt/homebrew/bin/gmail-mcp` | **Working** |
+| Google Calendar | `/opt/homebrew/bin/google-calendar-mcp` | Installed, needs OAuth |
+| Google Drive | `/opt/homebrew/bin/mcp-server-gdrive` | Installed, needs OAuth |
+| Canvas LMS | `canvas-mcp-server` | Needs CANVAS_API_TOKEN |
+| Notion | `@notionhq/notion-mcp-server` | Needs NOTION_TOKEN |
+| Slack | `@modelcontextprotocol/server-slack` | Needs SLACK_BOT_TOKEN |
 | Filesystem | `@modelcontextprotocol/server-filesystem` | Ready |
 | YouTube | `@kimtaeyoon83/mcp-server-youtube-transcript` | Ready |
-| Apple Notes/Reminders | `@rudrasankha/apple-mcp` | Ready |
+| Apple Notes/Reminders | `@anthropic/mcp-server-apple` | Ready (macOS) |
 | Fetch | `mcp-server-fetch` (uvx) | Ready |
 | Memory | `@modelcontextprotocol/server-memory` | Ready |
+
+### Current Session Status
+
+**Active (19 tools):** Gmail
+**Pending OAuth:** Google Calendar, Google Drive
+**Pending Tokens:** Canvas LMS, Notion, Slack
 
 ---
 

@@ -72,6 +72,22 @@
       "args": ["-y", "@modelcontextprotocol/server-memory"],
       "env": {},
       "description": "Persistent memory for remembering context across conversations."
+    },
+
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-slack"],
+      "env": {
+        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}"
+      },
+      "description": "Read channels, post messages, search Slack workspace."
+    },
+
+    "apple-mcp": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-server-apple"],
+      "env": {},
+      "description": "Apple Notes and Reminders for macOS. No auth required."
     }
   }
 }

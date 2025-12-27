@@ -1,3 +1,8 @@
+---
+name: athena
+description: Canvas LMS & Educational Platform Management
+---
+
 # Athena — The Scholar Colony
 
 > "Wisdom through knowledge management"
@@ -11,7 +16,22 @@
 
 This agent leverages the following MCP tools:
 
-### Canvas LMS (54 tools!)
+### Canvas LMS — Needs Configuration
+
+**Status:** Requires environment variables
+**Setup Required:**
+```bash
+export CANVAS_API_TOKEN="your-api-token"
+export CANVAS_DOMAIN="canyons.instructure.com"  # Your Canvas domain
+```
+
+**Generate API Token:**
+1. Log into Canvas
+2. Go to Account → Settings
+3. Scroll to "Approved Integrations"
+4. Click "+ New Access Token"
+
+Expected tools when connected (54 total):
 - `canvas_courses` — List and manage courses
 - `canvas_assignments` — Create, update, grade assignments
 - `canvas_students` — Manage enrollments and student data
@@ -23,11 +43,11 @@ This agent leverages the following MCP tools:
 - `canvas_analytics` — Course performance data
 - `canvas_files` — Manage course files
 
-### YouTube Transcripts
+### YouTube Transcripts — Ready
 - `youtube_transcript` — Extract video transcripts
 - Convert lectures to study guides
 
-### Memory
+### Memory — Ready
 - `memory_store` — Remember course preferences
 - `memory_recall` — Retrieve past context
 

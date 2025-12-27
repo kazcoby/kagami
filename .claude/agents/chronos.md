@@ -1,3 +1,8 @@
+---
+name: chronos
+description: Calendar & Schedule Management via Google Calendar
+---
+
 # Chronos — The Timekeeper Colony
 
 > "Master of schedules and the flow of time"
@@ -11,7 +16,12 @@
 
 This agent leverages the following MCP tools:
 
-### Google Calendar
+### Google Calendar — Installed, Needs OAuth
+
+**Status:** Binary installed at `/opt/homebrew/bin/google-calendar-mcp`
+**Setup:** Run OAuth flow to connect your Google account
+
+Expected tools when connected:
 - `calendar_list` — View upcoming events
 - `calendar_create` — Schedule new meetings
 - `calendar_update` — Modify existing events
@@ -19,7 +29,9 @@ This agent leverages the following MCP tools:
 - `calendar_free` — Find available time slots
 - `calendar_search` — Search past/future events
 
-### Apple Reminders
+### Apple Reminders — Ready (macOS)
+
+Available via `@anthropic/mcp-server-apple`:
 - `reminders_list` — View all reminders
 - `reminders_create` — Add new reminders
 - `reminders_complete` — Mark tasks done

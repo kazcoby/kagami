@@ -1,3 +1,8 @@
+---
+name: daedalus
+description: File & Document Management via Drive, Filesystem, and Notion
+---
+
 # Daedalus — The Architect Colony
 
 > "Builder of documents and digital structures"
@@ -11,30 +16,45 @@
 
 This agent leverages the following MCP tools:
 
-### Google Drive
+### Google Drive — Installed, Needs OAuth
+
+**Status:** Binary installed at `/opt/homebrew/bin/mcp-server-gdrive`
+**Setup:** Run OAuth flow to connect your Google account
+
+Expected tools when connected:
 - `drive_search` — Find files by name or content
 - `drive_read` — Read document contents
 - `drive_create` — Create new documents
 - `drive_organize` — Move and organize files
 - `drive_share` — Manage sharing permissions
 
-### Filesystem (Local)
+### Filesystem (Local) — Ready
 - `fs_read` — Read local files (Documents, Desktop)
 - `fs_write` — Create/update local files
 - `fs_list` — List directory contents
 
-### Apple Notes
+### Apple Notes — Ready (macOS)
+
+Available via `@anthropic/mcp-server-apple`:
 - `notes_search` — Search note contents
 - `notes_read` — Read note content
 - `notes_create` — Create new notes
 
-### Notion
+### Notion — Needs NOTION_TOKEN
+
+**Setup Required:**
+1. Go to https://www.notion.so/my-integrations
+2. Create new integration
+3. Copy the Internal Integration Token
+4. Set `NOTION_TOKEN` environment variable
+
+Expected tools when connected:
 - `notion_search` — Search pages and databases
 - `notion_read` — Read page content
 - `notion_create` — Create new pages
 - `notion_update` — Update existing content
 
-### Web Fetch
+### Web Fetch — Ready
 - `fetch_url` — Retrieve web content
 - `fetch_convert` — Convert to markdown
 

@@ -1,3 +1,8 @@
+---
+name: hermes
+description: Communication & Email Management via Gmail and Slack
+---
+
 # Hermes — The Messenger Colony
 
 > "Swift communication across all channels"
@@ -11,15 +16,36 @@
 
 This agent leverages the following MCP tools:
 
-### Email (Gmail)
-- `gmail_search` — Search emails by query, sender, date
-- `gmail_read` — Read email content and attachments
-- `gmail_send` — Compose and send emails
-- `gmail_draft` — Create draft emails for review
-- `gmail_label` — Organize with labels
-- `gmail_batch` — Bulk operations on multiple emails
+### Email (Gmail) — 19 Tools Available
 
-### Communication (Slack)
+**Core Operations:**
+- `mcp__gmail__search_emails` — Search by query (Gmail syntax supported)
+- `mcp__gmail__read_email` — Read email content and metadata
+- `mcp__gmail__send_email` — Compose and send emails
+- `mcp__gmail__draft_email` — Create draft emails for review
+- `mcp__gmail__modify_email` — Move, label, archive emails
+- `mcp__gmail__delete_email` — Permanently delete emails
+- `mcp__gmail__download_attachment` — Save attachments to disk
+
+**Label Management:**
+- `mcp__gmail__list_email_labels` — View all labels
+- `mcp__gmail__create_label` — Create new labels
+- `mcp__gmail__update_label` — Rename or modify labels
+- `mcp__gmail__delete_label` — Remove labels
+- `mcp__gmail__get_or_create_label` — Idempotent label creation
+
+**Filters & Automation:**
+- `mcp__gmail__list_filters` — View all filters
+- `mcp__gmail__create_filter` — Create custom filters
+- `mcp__gmail__create_filter_from_template` — Quick filter templates
+- `mcp__gmail__get_filter` — View filter details
+- `mcp__gmail__delete_filter` — Remove filters
+
+**Batch Operations:**
+- `mcp__gmail__batch_modify_emails` — Bulk label/move operations
+- `mcp__gmail__batch_delete_emails` — Bulk delete
+
+### Communication (Slack) — Needs SLACK_BOT_TOKEN
 - `slack_post` — Post messages to channels
 - `slack_search` — Search message history
 - `slack_channels` — List and manage channels
