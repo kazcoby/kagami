@@ -758,5 +758,36 @@
     console.log('%c🪞 Kagami', 'font-size: 24px; color: #D4A853; font-family: serif;');
     console.log('%cType window.鏡.reflect() to discover more.', 'color: #D4C4A8; font-style: italic;');
   </script>
+
+  <!-- Kagami 3D Experience Container -->
+  <div id="kagami-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
+
+  <!-- Loading Screen -->
+  <div id="loading" style="position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: #07060B; z-index: 1000; transition: opacity 0.6s ease;">
+    <div style="text-align: center; color: #D4A853;">
+      <div style="font-size: 48px; margin-bottom: 16px;">🪞</div>
+      <div style="font-family: 'Cinzel', serif;">Loading Kagami...</div>
+    </div>
+  </div>
+
+  <!-- VR Button -->
+  <button id="vr-button" style="position: fixed; bottom: 20px; right: 20px; padding: 12px 24px; background: rgba(212, 168, 83, 0.2); border: 1px solid #D4A853; color: #D4A853; font-family: 'Cinzel', serif; cursor: pointer; z-index: 100;" aria-label="Enter VR mode">
+    Enter VR
+  </button>
+
+  <!-- Chapter Navigation -->
+  <nav id="chapter-nav" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 100;" aria-label="Chapter navigation">
+    <button class="chapter-dot active" aria-label="Chapter 1: The Void" aria-current="true" style="width: 12px; height: 12px; border-radius: 50%; border: 1px solid #D4A853; background: #D4A853; cursor: pointer;"></button>
+    <button class="chapter-dot" aria-label="Chapter 2: Ignition" style="width: 12px; height: 12px; border-radius: 50%; border: 1px solid #D4A853; background: transparent; cursor: pointer;"></button>
+    <button class="chapter-dot" aria-label="Chapter 3: The Anvil" style="width: 12px; height: 12px; border-radius: 50%; border: 1px solid #D4A853; background: transparent; cursor: pointer;"></button>
+    <button class="chapter-dot" aria-label="Chapter 4: Currents" style="width: 12px; height: 12px; border-radius: 50%; border: 1px solid #D4A853; background: transparent; cursor: pointer;"></button>
+    <button class="chapter-dot" aria-label="Chapter 5: The Web" style="width: 12px; height: 12px; border-radius: 50%; border: 1px solid #D4A853; background: transparent; cursor: pointer;"></button>
+    <button class="chapter-dot" aria-label="Chapter 6: Lighthouse" style="width: 12px; height: 12px; border-radius: 50%; border: 1px solid #D4A853; background: transparent; cursor: pointer;"></button>
+    <button class="chapter-dot" aria-label="Chapter 7: The Grove" style="width: 12px; height: 12px; border-radius: 50%; border: 1px solid #D4A853; background: transparent; cursor: pointer;"></button>
+    <button class="chapter-dot" aria-label="Chapter 8: Crystallization" style="width: 12px; height: 12px; border-radius: 50%; border: 1px solid #D4A853; background: transparent; cursor: pointer;"></button>
+  </nav>
+
+  <!-- Main application script -->
+  <script type="module" src="../src/main.ts"></script>
 </body>
 </html>

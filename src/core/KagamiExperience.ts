@@ -16,11 +16,31 @@
 
 import * as THREE from 'three';
 
+// Core systems
+import { eventBus } from './EventBus';
+import { stateManager } from '../state/StateManager';
+
+// Particle systems
+import { ParticleManager } from '../particles/ParticleManager';
+import { ConstellationSystem } from '../particles/ConstellationSystem';
+import { MouseTrail } from '../particles/MouseTrail';
+
+// Physics
+import { PhysicsSystem } from '../physics/PhysicsSystem';
+
+// Audio
+import { audioManager } from '../audio/AudioManager';
+import { AmbientDrone } from '../audio/AmbientDrone';
+// Sound effects are triggered via eventBus
+
+// Mechanics
+import { secretManager } from '../mechanics/SecretManager';
+
 // Fibonacci timing sequence — mathematics underlies aesthetics
-const FIBONACCI_MS = [89, 144, 233, 377, 610, 987] as const;
+export const FIBONACCI_MS = [89, 144, 233, 377, 610, 987] as const;
 
 // Performance configuration — every pixel matters
-const PERF = {
+export const PERF = {
   maxOrbs: 80,
   maxLights: 7,
   cubeUpdateRate: 30,
@@ -29,7 +49,7 @@ const PERF = {
 } as const;
 
 // Colony colors from the Hallows and Colonies theme
-const COLONY_COLORS = {
+export const COLONY_COLORS = {
   void: '#D4A853',      // Gold — The origin
   spark: '#FF7043',     // Creativity
   forge: '#FFB74D',     // Implementation
@@ -41,7 +61,7 @@ const COLONY_COLORS = {
 } as const;
 
 // Chapter definitions — the eight stages of the journey
-interface ChapterConfig {
+export interface ChapterConfig {
   id: number;
   name: string;
   particles: number;
@@ -49,7 +69,7 @@ interface ChapterConfig {
   description: string;
 }
 
-const CHAPTERS: ChapterConfig[] = [
+export const CHAPTERS: ChapterConfig[] = [
   { id: 1, name: 'The Void', particles: 60, colony: 'void', description: 'Origin — seven colonies + 60 polka dots' },
   { id: 2, name: 'Ignition', particles: 50, colony: 'spark', description: 'Explosive spark particles of creativity' },
   { id: 3, name: 'The Anvil', particles: 40, colony: 'forge', description: 'Molten droplets with upward motion' },
@@ -70,17 +90,31 @@ export class KagamiExperience {
   private scene: THREE.Scene;
   private camera: THREE.PerspectiveCamera;
   private renderer: THREE.WebGLRenderer;
+  private clock: THREE.Clock;
+
   private currentChapter: number = 0;
   private phase: number = 0;
   private xrSession: XRSession | null = null;
 
+  // Systems
+  private particleManager: ParticleManager;
+  private constellations: ConstellationSystem;
+  private mouseTrail: MouseTrail;
+  private physics: PhysicsSystem;
+  private ambientDrone: AmbientDrone;
+
   // Accessibility: respect motion preferences
   private readonly prefersReducedMotion: boolean;
+
+  // Performance tracking
+  private frameCount: number = 0;
 
   constructor(container: HTMLElement) {
     // Check motion preferences for accessibility
     this.prefersReducedMotion =
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    this.clock = new THREE.Clock();
 
     // Initialize Three.js scene
     this.scene = new THREE.Scene();
@@ -108,11 +142,67 @@ export class KagamiExperience {
 
     container.appendChild(this.renderer.domElement);
 
+    // Initialize particle system
+    this.particleManager = new ParticleManager(this.scene, PERF.maxOrbs);
+
+    // Initialize constellation lines
+    this.constellations = new ConstellationSystem(this.scene);
+
+    // Initialize mouse trail
+    this.mouseTrail = new MouseTrail(this.particleManager, this.camera);
+
+    // Initialize physics
+    this.physics = new PhysicsSystem(this.particleManager);
+
+    // Initialize ambient drone
+    this.ambientDrone = new AmbientDrone();
+
+    // Add basic lighting
+    this.setupLighting();
+
+    // Handle window resize
+    window.addEventListener('resize', () => this.handleResize(container));
+
     // Set up hidden window object for transcendent discovery
     this.setupTranscendentLayer();
 
+    // Spawn initial particles for The Void
+    this.spawnChapterParticles(0);
+
+    // Listen for chapter changes
+    eventBus.on('chapter:enter', (e) => {
+      this.physics.configureForChapter(e.payload.index);
+    });
+
     // Announce to screen readers
     this.announceToScreenReader('Kagami experience loaded. Press Enter to begin.');
+  }
+
+  /**
+   * Set up scene lighting
+   */
+  private setupLighting(): void {
+    // Ambient light for base visibility
+    const ambient = new THREE.AmbientLight(0x404040, 0.5);
+    this.scene.add(ambient);
+
+    // Gold point light for the void center
+    const voidLight = new THREE.PointLight(
+      new THREE.Color(COLONY_COLORS.void).getHex(),
+      1,
+      10
+    );
+    voidLight.position.set(0, 1.6, -3);
+    this.scene.add(voidLight);
+  }
+
+  /**
+   * Handle window resize
+   */
+  private handleResize(container: HTMLElement): void {
+    this.camera.aspect = container.clientWidth / container.clientHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(container.clientWidth, container.clientHeight);
   }
 
   /**
@@ -158,16 +248,55 @@ export class KagamiExperience {
   goToChapter(chapterIndex: number): void {
     if (chapterIndex < 0 || chapterIndex >= CHAPTERS.length) return;
 
+    const previousChapter = this.currentChapter;
     this.currentChapter = chapterIndex;
     const chapter = CHAPTERS[chapterIndex];
+
+    // Emit events
+    eventBus.emit('chapter:exit', { index: previousChapter });
+    eventBus.emit('chapter:enter', { index: chapterIndex, name: chapter.name });
+    eventBus.emit('audio:trigger', { sound: 'chapter' });
+
+    // Update ambient drone
+    this.ambientDrone.setChapter(chapterIndex);
+
+    // Track visit
+    stateManager.visitChapter(chapterIndex);
+
+    // Check for all chapters visited
+    if (stateManager.hasVisitedAllChapters()) {
+      secretManager.discover('all_chapters');
+    }
+
+    // Clear and spawn new particles
+    this.particleManager.clearAll();
+    this.spawnChapterParticles(chapterIndex);
+
+    // Update constellation color
+    this.constellations.setColor(COLONY_COLORS[chapter.colony]);
 
     // Announce chapter change for accessibility
     this.announceToScreenReader(
       `Chapter ${chapter.id}: ${chapter.name}. ${chapter.description}`
     );
 
-    // TODO: Implement chapter transition with appropriate colony particles
     console.log(`[Kagami] Entering ${chapter.name} (${chapter.colony} colony)`);
+  }
+
+  /**
+   * Spawn particles for a chapter
+   */
+  private spawnChapterParticles(chapterIndex: number): void {
+    const chapter = CHAPTERS[chapterIndex];
+    const color = COLONY_COLORS[chapter.colony];
+
+    for (let i = 0; i < chapter.particles; i++) {
+      this.particleManager.spawn({
+        color,
+        colony: chapter.colony,
+        life: 10 + Math.random() * 10,
+      });
+    }
   }
 
   /**
@@ -175,6 +304,8 @@ export class KagamiExperience {
    */
   animate(): void {
     this.renderer.setAnimationLoop((time) => {
+      const delta = this.clock.getDelta();
+
       // Global breathing phase (0.5 to 1.5 scale)
       if (!this.prefersReducedMotion) {
         this.phase = 0.5 + 0.5 * (1 + Math.sin(time * 0.001));
@@ -182,20 +313,66 @@ export class KagamiExperience {
         this.phase = 1; // Static for reduced motion
       }
 
-      // Update particles and scene
-      this.update(time);
+      // Update all systems
+      this.update(time, delta);
 
       // Render
       this.renderer.render(this.scene, this.camera);
+
+      // Performance check
+      this.checkPerformance(delta);
     });
   }
 
   /**
    * Update scene state each frame
    */
-  private update(time: number): void {
-    // Frame-based updates will go here
-    // Keep under 16.67ms for 60fps VR target
+  private update(time: number, delta: number): void {
+    // Update mouse trail
+    this.mouseTrail.update(time);
+
+    // Update physics (applies forces to particles)
+    this.physics.update(delta);
+
+    // Update cursor position for physics
+    const cursorPos = this.mouseTrail.getWorldPosition();
+    this.physics.setCursorPosition(cursorPos);
+
+    // Update particles
+    this.particleManager.update(delta, this.phase);
+
+    // Update constellation lines
+    const activeParticles = this.particleManager.getActive();
+    this.constellations.update(activeParticles, this.phase);
+  }
+
+  /**
+   * Check frame performance
+   */
+  private checkPerformance(delta: number): void {
+    this.frameCount++;
+
+    if (this.frameCount % 60 === 0) {
+      const frameTime = delta * 1000;
+      if (frameTime > 20) { // More than 20ms = under 50fps
+        console.warn(`[Kagami] Frame budget exceeded: ${frameTime.toFixed(2)}ms`);
+      }
+    }
+  }
+
+  /**
+   * Start ambient audio (call on user interaction)
+   */
+  async startAudio(): Promise<void> {
+    await audioManager.init();
+    this.ambientDrone.start();
+  }
+
+  /**
+   * Toggle ambient audio
+   */
+  toggleAudio(): void {
+    this.ambientDrone.toggle();
   }
 
   /**
@@ -234,16 +411,75 @@ export class KagamiExperience {
         'Mathematics underlies aesthetics',
       ],
       fibonacci: FIBONACCI_MS,
+      forKristi: 'The books became networks. The shelves became doorways.',
+
+      // Statistics
+      stats: () => stateManager.getStats(),
+
+      // Secrets API
+      secrets: secretManager.getPublicAPI(),
 
       // A gift for the curious
       reflect: () => {
+        // Mark as discovered
+        secretManager.discover('console_explorer');
+
         console.log('%c🪞 Kagami — The Mirror of Infinite Reflection',
           'font-size: 20px; color: #D4A853; font-family: Cinzel, serif;');
         console.log('%cYou found the hidden mirror. The journey rewards exploration.',
           'color: #F5E6C8; font-style: italic;');
+        console.log('%c\nAvailable methods:', 'color: #B388FF;');
+        console.log('%c  window.鏡.stats() — View your progress', 'color: #81C784;');
+        console.log('%c  window.鏡.secrets.list() — List all secrets', 'color: #81C784;');
+        console.log('%c  window.鏡.secrets.progress() — Check discovery progress', 'color: #81C784;');
+        console.log('%c  window.鏡.summon("spark") — Summon a colony', 'color: #81C784;');
         return 'h(x) ≥ 0 — Always';
       },
+
+      // Summon a colony animation
+      summon: (colony: string) => {
+        const colonyKey = colony.toLowerCase() as keyof typeof COLONY_COLORS;
+        if (COLONY_COLORS[colonyKey]) {
+          eventBus.emit('particle:spawn', {
+            count: 10,
+            color: COLONY_COLORS[colonyKey],
+          });
+          eventBus.emit('audio:trigger', { sound: 'discover' });
+          console.log(`%c🏛️ ${colony} colony summoned`, `color: ${COLONY_COLORS[colonyKey]};`);
+        } else {
+          console.log('%cUnknown colony. Try: spark, forge, flow, nexus, beacon, grove, crystal',
+            'color: #FF6B6B;');
+        }
+      },
+
+      // Developer tools (hidden)
+      _dev: {
+        spawnParticles: (count: number = 10) => {
+          eventBus.emit('particle:spawn', { count });
+        },
+        burst: (intensity: number = 1) => {
+          eventBus.emit('particle:burst', { intensity });
+        },
+        shake: (intensity: number = 1) => {
+          eventBus.emit('physics:shake', { intensity });
+        },
+        exportState: () => stateManager.exportState(),
+      },
     };
+  }
+
+  /**
+   * Get current chapter index
+   */
+  getCurrentChapter(): number {
+    return this.currentChapter;
+  }
+
+  /**
+   * Get particle manager (for external access)
+   */
+  getParticleManager(): ParticleManager {
+    return this.particleManager;
   }
 
   /**
@@ -251,13 +487,12 @@ export class KagamiExperience {
    */
   dispose(): void {
     this.renderer.setAnimationLoop(null);
+    this.particleManager.dispose();
+    this.constellations.dispose();
+    this.ambientDrone.stop();
     this.renderer.dispose();
     if (this.xrSession) {
       this.xrSession.end();
     }
   }
 }
-
-// Export chapter configs for use by other modules
-export { CHAPTERS, COLONY_COLORS, FIBONACCI_MS, PERF };
-export type { ChapterConfig };
