@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to the Kagami Era | For Bri</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --midnight: #1a1a2e;
+      --lavender: #9d8df1;
+      --lover-pink: #f7c5cc;
+      --folklore-cream: #f5f0e8;
+      --gold: #d4af37;
+      --sky-blue: #87ceeb;
+      --cloud-white: #fff;
+      --reputation: #2d2d2d;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: var(--midnight);
+      color: var(--folklore-cream);
+      overflow-x: hidden;
+    }
+
+    /* Sparkle Canvas */
+    #sparkles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* Clouds floating */
+    .clouds {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .cloud {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      filter: blur(40px);
+      animation: float-cloud linear infinite;
+    }
+
+    @keyframes float-cloud {
+      from { transform: translateX(-200px); }
+      to { transform: translateX(calc(100vw + 200px)); }
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      background: linear-gradient(135deg, var(--midnight) 0%, #16213e 50%, #1a1a40 100%);
+      overflow: hidden;
+      padding: 2rem;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 30% 20%, rgba(157, 141, 241, 0.15) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 80%, rgba(247, 197, 204, 0.1) 0%, transparent 50%);
+    }
+
+    .plane-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      animation: fly-wobble 3s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    @keyframes fly-wobble {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50% { transform: translateY(-10px) rotate(5deg); }
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      color: var(--lavender);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fade-up 1s ease forwards 0.3s;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 10vw, 6rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--folklore-cream) 0%, var(--lavender) 50%, var(--lover-pink) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0;
+      animation: fade-up 1s ease forwards 0.5s;
+    }
+
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fade-up 1s ease forwards 0.7s;
+    }
+
+    .hero-tagline {
+      font-size: 1.3rem;
+      max-width: 600px;
+      line-height: 1.8;
+      color: rgba(245, 240, 232, 0.8);
+      opacity: 0;
+      animation: fade-up 1s ease forwards 0.9s;
+    }
+
+    .hero-tagline em {
+      color: var(--lavender);
+      font-style: italic;
+    }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--lavender);
+      font-size: 0.9rem;
+      opacity: 0;
+      animation: fade-up 1s ease forwards 1.5s;
+    }
+
+    .scroll-arrow {
+      width: 30px;
+      height: 50px;
+      border: 2px solid var(--lavender);
+      border-radius: 25px;
+      position: relative;
+    }
+
+    .scroll-arrow::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 6px;
+      background: var(--lavender);
+      border-radius: 50%;
+      animation: scroll-bounce 1.5s ease-in-out infinite;
+    }
+
+    @keyframes scroll-bounce {
+      0%, 100% { top: 8px; opacity: 1; }
+      50% { top: 25px; opacity: 0.5; }
+    }
+
+    /* Section Styles */
+    section {
+      padding: 6rem 2rem;
+      position: relative;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .section-lyric {
+      text-align: center;
+      font-style: italic;
+      color: var(--lavender);
+      margin-bottom: 4rem;
+      font-size: 1.1rem;
+    }
+
+    /* What is Kagami Section */
+    .what-is {
+      background: linear-gradient(180deg, var(--midnight) 0%, #1e1e3f 100%);
+    }
+
+    .definition-card {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(157, 141, 241, 0.2);
+      border-radius: 20px;
+      padding: 3rem;
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .definition-card::before {
+      content: '鏡';
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      font-size: 15rem;
+      opacity: 0.03;
+      font-family: serif;
+    }
+
+    .japanese {
+      font-size: 4rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--gold), var(--lover-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .pronunciation {
+      text-align: center;
+      color: var(--lavender);
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .definition-text {
+      font-size: 1.2rem;
+      line-height: 2;
+      text-align: center;
+    }
+
+    /* Capabilities Grid */
+    .capabilities {
+      background: linear-gradient(180deg, #1e1e3f 0%, var(--midnight) 100%);
+    }
+
+    .era-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .era-card {
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      cursor: default;
+    }
+
+    .era-card:hover {
+      transform: translateY(-10px) scale(1.02);
+    }
+
+    .era-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0.1;
+      transition: opacity 0.3s ease;
+    }
+
+    .era-card:hover::before {
+      opacity: 0.2;
+    }
+
+    /* Era-specific styles */
+    .era-lover {
+      background: linear-gradient(135deg, rgba(247, 197, 204, 0.15), rgba(255, 182, 193, 0.1));
+      border: 1px solid rgba(247, 197, 204, 0.3);
+    }
+    .era-lover:hover { box-shadow: 0 20px 60px rgba(247, 197, 204, 0.2); }
+    .era-lover .era-icon { color: var(--lover-pink); }
+
+    .era-folklore {
+      background: linear-gradient(135deg, rgba(245, 240, 232, 0.1), rgba(200, 190, 170, 0.05));
+      border: 1px solid rgba(245, 240, 232, 0.2);
+    }
+    .era-folklore:hover { box-shadow: 0 20px 60px rgba(245, 240, 232, 0.15); }
+    .era-folklore .era-icon { color: var(--folklore-cream); }
+
+    .era-midnights {
+      background: linear-gradient(135deg, rgba(157, 141, 241, 0.15), rgba(100, 80, 180, 0.1));
+      border: 1px solid rgba(157, 141, 241, 0.3);
+    }
+    .era-midnights:hover { box-shadow: 0 20px 60px rgba(157, 141, 241, 0.2); }
+    .era-midnights .era-icon { color: var(--lavender); }
+
+    .era-reputation {
+      background: linear-gradient(135deg, rgba(45, 45, 45, 0.4), rgba(80, 80, 80, 0.2));
+      border: 1px solid rgba(150, 150, 150, 0.2);
+    }
+    .era-reputation:hover { box-shadow: 0 20px 60px rgba(100, 100, 100, 0.2); }
+    .era-reputation .era-icon { color: #888; }
+
+    .era-1989 {
+      background: linear-gradient(135deg, rgba(135, 206, 235, 0.15), rgba(100, 180, 220, 0.1));
+      border: 1px solid rgba(135, 206, 235, 0.3);
+    }
+    .era-1989:hover { box-shadow: 0 20px 60px rgba(135, 206, 235, 0.2); }
+    .era-1989 .era-icon { color: var(--sky-blue); }
+
+    .era-fearless {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(180, 150, 40, 0.1));
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+    .era-fearless:hover { box-shadow: 0 20px 60px rgba(212, 175, 55, 0.2); }
+    .era-fearless .era-icon { color: var(--gold); }
+
+    .era-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .era-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .era-capability {
+      color: rgba(245, 240, 232, 0.6);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 1rem;
+    }
+
+    .era-description {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: rgba(245, 240, 232, 0.85);
+    }
+
+    .era-examples {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .era-examples h4 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.75rem;
+      opacity: 0.7;
+    }
+
+    .era-examples ul {
+      list-style: none;
+      font-size: 0.95rem;
+    }
+
+    .era-examples li {
+      padding: 0.4rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .era-examples li::before {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      opacity: 0.5;
+    }
+
+    /* How It Works */
+    .how-it-works {
+      background: linear-gradient(180deg, var(--midnight) 0%, #1a1a35 100%);
+    }
+
+    .timeline {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--lavender), var(--lover-pink), var(--gold));
+      transform: translateX(-50%);
+    }
+
+    .timeline-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .timeline-item:nth-child(odd) {
+      flex-direction: row-reverse;
+      text-align: right;
+    }
+
+    .timeline-content {
+      width: 45%;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 15px;
+      border: 1px solid rgba(157, 141, 241, 0.2);
+    }
+
+    .timeline-icon {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 60px;
+      background: var(--midnight);
+      border: 3px solid var(--lavender);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      z-index: 10;
+    }
+
+    .timeline-step {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: var(--gold);
+    }
+
+    .timeline-text {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: rgba(245, 240, 232, 0.8);
+    }
+
+    /* Flight Path Section */
+    .flight-path {
+      background: linear-gradient(180deg, #1a1a35 0%, var(--midnight) 100%);
+      text-align: center;
+    }
+
+    .destinations {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .destination {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(135, 206, 235, 0.2);
+      border-radius: 15px;
+      padding: 1.5rem 2rem;
+      min-width: 200px;
+      transition: all 0.3s ease;
+    }
+
+    .destination:hover {
+      background: rgba(135, 206, 235, 0.1);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(135, 206, 235, 0.15);
+    }
+
+    .destination-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .destination-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .destination-desc {
+      font-size: 0.9rem;
+      color: rgba(245, 240, 232, 0.6);
+    }
+
+    /* CTA Section */
+    .cta {
+      background: linear-gradient(135deg, var(--midnight) 0%, #1e1e3f 50%, var(--midnight) 100%);
+      text-align: center;
+      padding: 8rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(157, 141, 241, 0.1) 0%, transparent 70%);
+    }
+
+    .cta-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .cta-text {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      line-height: 1.8;
+      color: rgba(245, 240, 232, 0.8);
+    }
+
+    .cta-signature {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--gold);
+      margin-top: 3rem;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: #0d0d1a;
+      color: rgba(245, 240, 232, 0.4);
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: var(--lavender);
+      text-decoration: none;
+    }
+
+    /* Scroll Animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 0.8s ease;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .timeline::before {
+        left: 20px;
+      }
+
+      .timeline-item,
+      .timeline-item:nth-child(odd) {
+        flex-direction: column;
+        text-align: left;
+        padding-left: 60px;
+      }
+
+      .timeline-content {
+        width: 100%;
+      }
+
+      .timeline-icon {
+        left: 20px;
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+
+      .era-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Glitter cursor trail */
+    .cursor-sparkle {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      animation: sparkle-fade 0.6s ease forwards;
+    }
+
+    @keyframes sparkle-fade {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="sparkles"></canvas>
+
+  <div class="clouds">
+    <!-- Clouds generated by JS -->
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <span class="plane-icon">✈️</span>
+    <p class="hero-subtitle">Welcome to the</p>
+    <h1 class="hero-title">Kagami Era</h1>
+    <p class="hero-name">A guide for Bri ✨</p>
+    <p class="hero-tagline">
+      Your friend has an AI assistant that can do <em>enchanting</em> things.<br>
+      Let me take you on a tour of what's possible.
+    </p>
+    <div class="scroll-indicator">
+      <div class="scroll-arrow"></div>
+      <span>Begin the journey</span>
+    </div>
+  </section>
+
+  <!-- What is Kagami -->
+  <section class="what-is">
+    <h2 class="section-title reveal">What is Kagami?</h2>
+    <p class="section-lyric reveal">"Long story short, I survived"</p>
+
+    <div class="definition-card reveal">
+      <div class="japanese">鏡</div>
+      <p class="pronunciation">ka · ga · mi</p>
+      <p class="definition-text">
+        <strong>Kagami</strong> is a personalized AI assistant powered by Claude —
+        an advanced AI that can write code, create websites, manage emails,
+        research the internet, and help with countless creative and practical tasks.
+        <br><br>
+        Think of it as having a brilliant, tireless friend who's always ready to help —
+        whether you need a recipe finder, a travel planner, or help organizing your inbox
+        between flights. ✈️
+      </p>
+    </div>
+  </section>
+
+  <!-- Capabilities (as Eras) -->
+  <section class="capabilities">
+    <h2 class="section-title reveal">The Eras of Capability</h2>
+    <p class="section-lyric reveal">"We are never getting back together... with boring manual tasks"</p>
+
+    <div class="era-grid">
+      <div class="era-card era-lover reveal">
+        <span class="era-icon">💌</span>
+        <h3 class="era-name">The Lover Era</h3>
+        <p class="era-capability">Email & Communication</p>
+        <p class="era-description">
+          I can read, search, organize, draft, and send emails.
+          Manage your inbox while you're at 35,000 feet.
+        </p>
+        <div class="era-examples">
+          <h4>Try asking:</h4>
+          <ul>
+            <li>"Check my email for flight schedule updates"</li>
+            <li>"Draft a reply to mom's email"</li>
+            <li>"Find all emails from Delta this month"</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="era-card era-folklore reveal">
+        <span class="era-icon">🌲</span>
+        <h3 class="era-name">The Folklore Era</h3>
+        <p class="era-capability">Research & Discovery</p>
+        <p class="era-description">
+          I search the web, find information, compare options,
+          and compile research on any topic you're curious about.
+        </p>
+        <div class="era-examples">
+          <h4>Try asking:</h4>
+          <ul>
+            <li>"Find the best layover restaurants in Denver"</li>
+            <li>"Research Taylor Swift Eras Tour merch prices"</li>
+            <li>"What are the top things to do in Tokyo?"</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="era-card era-midnights reveal">
+        <span class="era-icon">🌙</span>
+        <h3 class="era-name">The Midnights Era</h3>
+        <p class="era-capability">Website Creation</p>
+        <p class="era-description">
+          I build beautiful, interactive websites from scratch —
+          like this very page you're reading right now.
+        </p>
+        <div class="era-examples">
+          <h4>Try asking:</h4>
+          <ul>
+            <li>"Make me a recipe finder website"</li>
+            <li>"Create a travel packing checklist app"</li>
+            <li>"Build a countdown to my next concert"</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="era-card era-reputation reveal">
+        <span class="era-icon">🐍</span>
+        <h3 class="era-name">The Reputation Era</h3>
+        <p class="era-capability">Code & Technical Work</p>
+        <p class="era-description">
+          I write, debug, and explain code in any programming language.
+          From simple scripts to complex applications.
+        </p>
+        <div class="era-examples">
+          <h4>Try asking:</h4>
+          <ul>
+            <li>"Write a script to organize my photos by date"</li>
+            <li>"Help me automate this spreadsheet task"</li>
+            <li>"Explain how this code works"</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="era-card era-1989 reveal">
+        <span class="era-icon">🌊</span>
+        <h3 class="era-name">The 1989 Era</h3>
+        <p class="era-capability">Files & Organization</p>
+        <p class="era-description">
+          I read, write, edit, and organize files on your computer.
+          Finding needles in haystacks is my specialty.
+        </p>
+        <div class="era-examples">
+          <h4>Try asking:</h4>
+          <ul>
+            <li>"Find all my PDF documents from 2024"</li>
+            <li>"Organize these files into folders by type"</li>
+            <li>"Search my notes for travel packing lists"</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="era-card era-fearless reveal">
+        <span class="era-icon">⭐</span>
+        <h3 class="era-name">The Fearless Era</h3>
+        <p class="era-capability">Planning & Problem-Solving</p>
+        <p class="era-description">
+          I break down complex tasks, create plans, track progress,
+          and help you tackle anything — fearlessly.
+        </p>
+        <div class="era-examples">
+          <h4>Try asking:</h4>
+          <ul>
+            <li>"Plan a surprise birthday party"</li>
+            <li>"Help me create a workout schedule"</li>
+            <li>"What should I pack for 5 days in NYC?"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-it-works">
+    <h2 class="section-title reveal">How It Works</h2>
+    <p class="section-lyric reveal">"It's me, hi, I'm the helper, it's me"</p>
+
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-content">
+          <h3 class="timeline-step">1. You Ask</h3>
+          <p class="timeline-text">
+            Type what you need in plain English — no special commands needed.
+            Just talk to me like you'd talk to a friend.
+          </p>
+        </div>
+        <div class="timeline-icon">💬</div>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-content">
+          <h3 class="timeline-step">2. I Think</h3>
+          <p class="timeline-text">
+            I analyze your request, gather context, and figure out
+            the best way to help — often using multiple tools together.
+          </p>
+        </div>
+        <div class="timeline-icon">🧠</div>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-content">
+          <h3 class="timeline-step">3. I Do</h3>
+          <p class="timeline-text">
+            I take action — searching the web, writing code, reading files,
+            drafting emails, or creating something new.
+          </p>
+        </div>
+        <div class="timeline-icon">⚡</div>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-content">
+          <h3 class="timeline-step">4. You Review</h3>
+          <p class="timeline-text">
+            I show you the results and ask for feedback.
+            Want changes? Just tell me — I'm happy to iterate until it's perfect.
+          </p>
+        </div>
+        <div class="timeline-icon">✨</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flight Path Section -->
+  <section class="flight-path">
+    <h2 class="section-title reveal">Your Flight Path</h2>
+    <p class="section-lyric reveal">"Cause baby now we've got good tools"</p>
+
+    <div class="destinations reveal">
+      <div class="destination">
+        <div class="destination-icon">🍳</div>
+        <h3 class="destination-name">Dinner Helper</h3>
+        <p class="destination-desc">Recipe finder with protein filters</p>
+      </div>
+      <div class="destination">
+        <div class="destination-icon">📧</div>
+        <h3 class="destination-name">Inbox Zero</h3>
+        <p class="destination-desc">Email management on autopilot</p>
+      </div>
+      <div class="destination">
+        <div class="destination-icon">🎯</div>
+        <h3 class="destination-name">Trip Planner</h3>
+        <p class="destination-desc">Itineraries for your layovers</p>
+      </div>
+      <div class="destination">
+        <div class="destination-icon">🛍️</div>
+        <h3 class="destination-name">Shopping Scout</h3>
+        <p class="destination-desc">Finding rare items & deals</p>
+      </div>
+      <div class="destination">
+        <div class="destination-icon">📝</div>
+        <h3 class="destination-name">Task Tracker</h3>
+        <p class="destination-desc">Never forget a to-do</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <h2 class="cta-title reveal">Ready for Takeoff?</h2>
+    <p class="cta-text reveal">
+      Whether you're planning your next adventure, organizing your life between flights,
+      or just curious about what's possible — I'm here to help make it happen.
+      <br><br>
+      Just say the word, and we'll make magic together. ✨
+    </p>
+    <p class="cta-signature reveal">
+      — Kagami 鏡<br>
+      <small style="opacity: 0.6; font-size: 0.8rem;">Made with love for Bri</small>
+    </p>
+  </section>
+
+  <footer>
+    <p>Built by <a href="#">Kagami</a> • Powered by Claude • 2024</p>
+    <p style="margin-top: 0.5rem; font-style: italic;">"In the mirror, we see not what is, but what could be."</p>
+  </footer>
+
+  <script>
+    // Sparkle Canvas
+    const canvas = document.getElementById('sparkles');
+    const ctx = canvas.getContext('2d');
+    let sparkles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Sparkle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = Math.random() * 3 + 1;
+        this.speedX = (Math.random() - 0.5) * 2;
+        this.speedY = (Math.random() - 0.5) * 2;
+        this.life = 1;
+        this.decay = Math.random() * 0.02 + 0.01;
+        this.color = ['#d4af37', '#f7c5cc', '#9d8df1', '#fff'][Math.floor(Math.random() * 4)];
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life -= this.decay;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.life;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // Random ambient sparkles
+    setInterval(() => {
+      if (sparkles.length < 50) {
+        sparkles.push(new Sparkle(
+          Math.random() * canvas.width,
+          Math.random() * canvas.height
+        ));
+      }
+    }, 200);
+
+    // Mouse trail sparkles
+    document.addEventListener('mousemove', (e) => {
+      if (Math.random() > 0.7) {
+        sparkles.push(new Sparkle(e.clientX, e.clientY));
+      }
+    });
+
+    function animateSparkles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      sparkles = sparkles.filter(s => s.life > 0);
+      sparkles.forEach(s => {
+        s.update();
+        s.draw();
+      });
+
+      requestAnimationFrame(animateSparkles);
+    }
+    animateSparkles();
+
+    // Generate clouds
+    const cloudsContainer = document.querySelector('.clouds');
+    for (let i = 0; i < 8; i++) {
+      const cloud = document.createElement('div');
+      cloud.className = 'cloud';
+      cloud.style.width = `${Math.random() * 300 + 100}px`;
+      cloud.style.height = `${Math.random() * 100 + 50}px`;
+      cloud.style.top = `${Math.random() * 100}%`;
+      cloud.style.animationDuration = `${Math.random() * 60 + 40}s`;
+      cloud.style.animationDelay = `${-Math.random() * 60}s`;
+      cloudsContainer.appendChild(cloud);
+    }
+
+    // Scroll reveal animation
+    const reveals = document.querySelectorAll('.reveal');
+
+    function checkReveal() {
+      reveals.forEach(el => {
+        const windowHeight = window.innerHeight;
+        const elementTop = el.getBoundingClientRect().top;
+        const revealPoint = 150;
+
+        if (elementTop < windowHeight - revealPoint) {
+          el.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', checkReveal);
+    checkReveal(); // Check on load
+
+    // Cursor sparkle trail on click
+    document.addEventListener('click', (e) => {
+      for (let i = 0; i < 8; i++) {
+        setTimeout(() => {
+          sparkles.push(new Sparkle(
+            e.clientX + (Math.random() - 0.5) * 30,
+            e.clientY + (Math.random() - 0.5) * 30
+          ));
+        }, i * 30);
+      }
+    });
+  </script>
+</body>
+</html>

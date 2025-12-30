@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What's for Dinner? | Beginner-Friendly High-Protein Meals</title>
+  <style>
+    :root {
+      --primary: #e07b53;
+      --primary-dark: #c4613b;
+      --secondary: #4a7c59;
+      --accent: #f4e4ba;
+      --bg: #fefae0;
+      --text: #2c2c2c;
+      --text-light: #666;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+      --radius: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    header p {
+      font-size: 1.2rem;
+      opacity: 0.95;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--primary-dark);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 1rem;
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Filter Section */
+    .filters {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .filter-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .filter-label {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text);
+    }
+
+    .filter-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      padding: 0.6rem 1.2rem;
+      border: 2px solid #e0e0e0;
+      background: white;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--primary);
+      background: #fff5f0;
+    }
+
+    .filter-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .filter-btn .emoji {
+      font-size: 1.1rem;
+    }
+
+    /* Results Header */
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .results-count {
+      font-size: 1.1rem;
+      color: var(--text-light);
+    }
+
+    .clear-filters {
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 0.95rem;
+      text-decoration: underline;
+    }
+
+    .clear-filters:hover {
+      color: var(--primary-dark);
+    }
+
+    /* Recipe Grid */
+    .recipe-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Recipe Card */
+    .recipe-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .recipe-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+
+    .recipe-card.hidden {
+      display: none;
+    }
+
+    .recipe-image {
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    }
+
+    .recipe-content {
+      padding: 1.25rem;
+    }
+
+    .recipe-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .recipe-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .recipe-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .protein-badge {
+      background: var(--secondary);
+      color: white;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .recipe-description {
+      color: var(--text-light);
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+
+    .recipe-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .tag {
+      background: var(--accent);
+      color: var(--primary-dark);
+      padding: 0.2rem 0.6rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      max-width: 700px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: sticky;
+      top: 0;
+      background: var(--card-bg);
+      z-index: 10;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-light);
+      padding: 0.5rem;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      color: var(--text);
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-meta {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .modal-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .modal-meta-item .icon {
+      font-size: 1.3rem;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 1.5rem 0 1rem;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .ingredients-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .ingredients-list li {
+      padding: 0.5rem;
+      background: #f8f8f8;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    .ingredients-list li::before {
+      content: "✓ ";
+      color: var(--secondary);
+      font-weight: bold;
+    }
+
+    .steps-list {
+      list-style: none;
+      counter-reset: steps;
+    }
+
+    .steps-list li {
+      counter-increment: steps;
+      padding: 1rem;
+      padding-left: 3.5rem;
+      position: relative;
+      background: #f8f8f8;
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+    }
+
+    .steps-list li::before {
+      content: counter(steps);
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 28px;
+      height: 28px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .tip-box {
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      border-left: 4px solid var(--secondary);
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin-top: 1.5rem;
+    }
+
+    .tip-box h4 {
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tip-box p {
+      color: #2e7d32;
+      font-size: 0.95rem;
+    }
+
+    /* No Results */
+    .no-results {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-light);
+    }
+
+    .no-results-emoji {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .no-results h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      header p {
+        font-size: 1rem;
+      }
+
+      main {
+        padding: 1rem;
+      }
+
+      .filters {
+        padding: 1rem;
+      }
+
+      .recipe-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-meta {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .ingredients-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .recipe-card {
+      animation: fadeIn 0.4s ease forwards;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>What's for Dinner?</h1>
+    <p>Beginner-friendly recipes packed with protein. Filter by what you're craving and start cooking!</p>
+    <span class="badge">New to Cooking? You've got this!</span>
+  </header>
+
+  <main>
+    <section class="filters">
+      <div class="filter-group">
+        <div class="filter-label">
+          <span>🥩</span> Protein Type
+        </div>
+        <div class="filter-buttons" data-filter="protein">
+          <button class="filter-btn" data-value="chicken"><span class="emoji">🍗</span> Chicken</button>
+          <button class="filter-btn" data-value="beef"><span class="emoji">🥩</span> Beef</button>
+          <button class="filter-btn" data-value="pork"><span class="emoji">🥓</span> Pork</button>
+          <button class="filter-btn" data-value="fish"><span class="emoji">🐟</span> Fish</button>
+          <button class="filter-btn" data-value="shrimp"><span class="emoji">🦐</span> Shrimp</button>
+          <button class="filter-btn" data-value="eggs"><span class="emoji">🥚</span> Eggs</button>
+          <button class="filter-btn" data-value="tofu"><span class="emoji">🫛</span> Tofu/Plant</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">
+          <span>⏱️</span> Cooking Time
+        </div>
+        <div class="filter-buttons" data-filter="time">
+          <button class="filter-btn" data-value="15"><span class="emoji">⚡</span> 15 min</button>
+          <button class="filter-btn" data-value="30"><span class="emoji">🕐</span> 30 min</button>
+          <button class="filter-btn" data-value="45"><span class="emoji">🕑</span> 45 min</button>
+          <button class="filter-btn" data-value="60"><span class="emoji">🍲</span> 1 hour+</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">
+          <span>🍳</span> Cooking Method
+        </div>
+        <div class="filter-buttons" data-filter="method">
+          <button class="filter-btn" data-value="stovetop"><span class="emoji">🔥</span> Stovetop</button>
+          <button class="filter-btn" data-value="oven"><span class="emoji">♨️</span> Oven</button>
+          <button class="filter-btn" data-value="one-pot"><span class="emoji">🥘</span> One-Pot</button>
+          <button class="filter-btn" data-value="no-cook"><span class="emoji">🥗</span> No-Cook</button>
+          <button class="filter-btn" data-value="air-fryer"><span class="emoji">💨</span> Air Fryer</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="results-header">
+      <span class="results-count"><span id="count">12</span> recipes found</span>
+      <button class="clear-filters" onclick="clearFilters()">Clear all filters</button>
+    </div>
+
+    <div class="recipe-grid" id="recipeGrid">
+      <!-- Recipes will be inserted here -->
+    </div>
+
+    <div class="no-results" id="noResults" style="display: none;">
+      <div class="no-results-emoji">🤔</div>
+      <h3>No recipes match your filters</h3>
+      <p>Try removing some filters to see more options!</p>
+    </div>
+  </main>
+
+  <!-- Recipe Modal -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Recipe Title</h2>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Modal content inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Recipe Database
+    const recipes = [
+      {
+        id: 1,
+        title: "Honey Garlic Chicken",
+        emoji: "🍗",
+        protein: "chicken",
+        time: 30,
+        method: "stovetop",
+        proteinGrams: 42,
+        description: "Juicy pan-seared chicken thighs in a sticky honey garlic glaze. A crowd-pleaser!",
+        tags: ["Quick", "Family-Friendly", "Gluten-Free Option"],
+        ingredients: [
+          "4 chicken thighs (bone-in or boneless)",
+          "3 tbsp honey",
+          "4 cloves garlic, minced",
+          "3 tbsp soy sauce",
+          "1 tbsp olive oil",
+          "Salt and pepper to taste",
+          "Green onions for garnish"
+        ],
+        steps: [
+          "Pat chicken dry with paper towels. Season both sides with salt and pepper.",
+          "Heat olive oil in a large skillet over medium-high heat.",
+          "Add chicken skin-side down. Cook 6-7 minutes until golden, then flip.",
+          "While chicken cooks, mix honey, garlic, and soy sauce in a small bowl.",
+          "Pour sauce over chicken. Reduce heat to medium-low.",
+          "Cook 5-7 more minutes, spooning sauce over chicken, until cooked through (165°F internal).",
+          "Garnish with sliced green onions and serve!"
+        ],
+        tip: "Don't move the chicken while it's searing! Let it develop a golden crust before flipping. This creates the best flavor."
+      },
+      {
+        id: 2,
+        title: "Sheet Pan Salmon & Veggies",
+        emoji: "🐟",
+        protein: "fish",
+        time: 30,
+        method: "oven",
+        proteinGrams: 39,
+        description: "Perfectly roasted salmon with colorful vegetables. One pan, minimal cleanup!",
+        tags: ["Healthy", "One-Pan", "Meal Prep"],
+        ingredients: [
+          "4 salmon fillets (6 oz each)",
+          "2 cups broccoli florets",
+          "1 red bell pepper, sliced",
+          "1 zucchini, sliced",
+          "3 tbsp olive oil",
+          "2 cloves garlic, minced",
+          "1 lemon",
+          "Salt, pepper, and Italian seasoning"
+        ],
+        steps: [
+          "Preheat oven to 400°F (200°C). Line a baking sheet with parchment paper.",
+          "Toss vegetables with 2 tbsp olive oil, garlic, salt, and Italian seasoning.",
+          "Spread vegetables on the outer edges of the baking sheet.",
+          "Place salmon fillets in the center. Drizzle with remaining oil.",
+          "Season salmon with salt, pepper, and squeeze half the lemon over top.",
+          "Bake 15-18 minutes until salmon flakes easily and veggies are tender.",
+          "Squeeze remaining lemon over everything before serving."
+        ],
+        tip: "Salmon is done when it flakes easily with a fork and reaches 145°F. It's okay if the center is slightly pink - it will continue cooking for a minute after you remove it!"
+      },
+      {
+        id: 3,
+        title: "Classic Beef Tacos",
+        emoji: "🌮",
+        protein: "beef",
+        time: 30,
+        method: "stovetop",
+        proteinGrams: 28,
+        description: "Flavorful ground beef tacos with all your favorite toppings. Taco Tuesday made easy!",
+        tags: ["Family-Friendly", "Customizable", "Quick"],
+        ingredients: [
+          "1 lb ground beef (80/20)",
+          "1 packet taco seasoning (or homemade)",
+          "8 small tortillas (corn or flour)",
+          "1 cup shredded lettuce",
+          "1 cup shredded cheese",
+          "1/2 cup sour cream",
+          "1 tomato, diced",
+          "Salsa of choice"
+        ],
+        steps: [
+          "Heat a large skillet over medium-high heat.",
+          "Add ground beef, breaking it up with a wooden spoon.",
+          "Cook 5-7 minutes until no pink remains. Drain excess fat if needed.",
+          "Add taco seasoning and 1/4 cup water. Stir well.",
+          "Simmer 3-4 minutes until sauce thickens.",
+          "Warm tortillas in microwave (30 seconds) or dry skillet.",
+          "Assemble tacos with meat and your favorite toppings!"
+        ],
+        tip: "Break the meat into small pieces as it cooks for the best texture. Don't stir constantly - let it brown a bit for more flavor!"
+      },
+      {
+        id: 4,
+        title: "Garlic Butter Shrimp",
+        emoji: "🦐",
+        protein: "shrimp",
+        time: 15,
+        method: "stovetop",
+        proteinGrams: 35,
+        description: "Restaurant-quality shrimp in just 15 minutes. Serve over rice or pasta!",
+        tags: ["Quick", "Impressive", "Date Night"],
+        ingredients: [
+          "1 lb large shrimp, peeled and deveined",
+          "4 tbsp butter",
+          "5 cloves garlic, minced",
+          "1/4 cup white wine (or chicken broth)",
+          "2 tbsp fresh parsley, chopped",
+          "1/2 lemon, juiced",
+          "Red pepper flakes (optional)",
+          "Salt and pepper"
+        ],
+        steps: [
+          "Pat shrimp dry and season with salt and pepper.",
+          "Melt 2 tbsp butter in a large skillet over medium-high heat.",
+          "Add shrimp in a single layer. Cook 1-2 minutes per side until pink. Remove and set aside.",
+          "Reduce heat to medium. Add remaining butter and garlic.",
+          "Sauté garlic 30 seconds until fragrant (don't let it burn!).",
+          "Add wine/broth and lemon juice. Let it bubble for 1 minute.",
+          "Return shrimp to pan, toss with sauce. Top with parsley and serve immediately."
+        ],
+        tip: "Shrimp cook FAST - they're done when they turn pink and curl into a C-shape. Overcooked shrimp become rubbery, so watch them closely!"
+      },
+      {
+        id: 5,
+        title: "Fluffy Veggie Omelette",
+        emoji: "🥚",
+        protein: "eggs",
+        time: 15,
+        method: "stovetop",
+        proteinGrams: 21,
+        description: "A protein-packed breakfast (or dinner!) that's ready in minutes.",
+        tags: ["Breakfast-for-Dinner", "Vegetarian", "Quick"],
+        ingredients: [
+          "3 large eggs",
+          "2 tbsp milk",
+          "1/4 cup shredded cheese",
+          "1/4 cup diced bell pepper",
+          "2 tbsp diced onion",
+          "Handful of spinach",
+          "1 tbsp butter",
+          "Salt and pepper"
+        ],
+        steps: [
+          "Whisk eggs and milk together until smooth. Season with salt and pepper.",
+          "Melt butter in a non-stick pan over medium heat.",
+          "Add peppers and onions. Sauté 2-3 minutes until softened.",
+          "Pour egg mixture into pan. Let it set for 30 seconds.",
+          "Gently push edges toward center, tilting pan to let uncooked egg flow underneath.",
+          "When mostly set but still slightly wet on top, add cheese and spinach to one half.",
+          "Fold omelette in half and slide onto plate. Serve immediately!"
+        ],
+        tip: "The key to a fluffy omelette is not stirring too much and keeping the heat at medium. If the pan is too hot, the eggs will brown and become tough."
+      },
+      {
+        id: 6,
+        title: "Crispy Tofu Stir-Fry",
+        emoji: "🥡",
+        protein: "tofu",
+        time: 30,
+        method: "stovetop",
+        proteinGrams: 24,
+        description: "Golden, crispy tofu with colorful veggies in a savory sauce. Plant-powered deliciousness!",
+        tags: ["Vegan", "Plant-Based", "Healthy"],
+        ingredients: [
+          "1 block extra-firm tofu, pressed and cubed",
+          "2 tbsp cornstarch",
+          "3 tbsp soy sauce",
+          "1 tbsp sesame oil",
+          "2 cups mixed stir-fry vegetables",
+          "2 cloves garlic, minced",
+          "1 tbsp ginger, grated",
+          "2 tbsp vegetable oil"
+        ],
+        steps: [
+          "Press tofu for 15 minutes to remove excess water. Cut into 1-inch cubes.",
+          "Toss tofu cubes with cornstarch until evenly coated.",
+          "Heat vegetable oil in a large pan or wok over high heat.",
+          "Add tofu in a single layer. Don't move it! Let it crisp 3-4 minutes per side.",
+          "Remove crispy tofu and set aside.",
+          "Add sesame oil, garlic, and ginger. Stir 30 seconds.",
+          "Add vegetables and stir-fry 3-4 minutes. Add soy sauce and tofu. Toss and serve!"
+        ],
+        tip: "The secret to crispy tofu is pressing out the water AND not moving it while it cooks. Let each side get golden before flipping!"
+      },
+      {
+        id: 7,
+        title: "One-Pot Chicken & Rice",
+        emoji: "🍚",
+        protein: "chicken",
+        time: 45,
+        method: "one-pot",
+        proteinGrams: 38,
+        description: "Comfort food at its finest. Everything cooks together for maximum flavor!",
+        tags: ["One-Pot", "Comfort Food", "Family-Friendly"],
+        ingredients: [
+          "4 chicken thighs",
+          "1.5 cups long-grain rice",
+          "2.5 cups chicken broth",
+          "1 onion, diced",
+          "3 cloves garlic, minced",
+          "1 tsp paprika",
+          "1/2 tsp turmeric",
+          "2 tbsp olive oil",
+          "Salt and pepper"
+        ],
+        steps: [
+          "Season chicken with paprika, salt, and pepper.",
+          "Heat oil in a large pot or Dutch oven over medium-high heat.",
+          "Sear chicken 4-5 minutes per side until golden. Remove and set aside.",
+          "Add onion to the pot. Sauté 3 minutes until softened.",
+          "Add garlic and turmeric. Stir 30 seconds.",
+          "Add rice and stir to coat. Pour in broth and nestle chicken on top.",
+          "Bring to boil, then cover and reduce to low. Simmer 20 minutes until rice is tender.",
+          "Let rest 5 minutes before serving."
+        ],
+        tip: "Resist the urge to lift the lid while the rice cooks! The steam is what makes it fluffy. Trust the process!"
+      },
+      {
+        id: 8,
+        title: "BBQ Pork Chops",
+        emoji: "🥓",
+        protein: "pork",
+        time: 30,
+        method: "oven",
+        proteinGrams: 36,
+        description: "Juicy, caramelized pork chops with a sticky BBQ glaze. Easier than grilling!",
+        tags: ["Easy", "BBQ", "Crowd-Pleaser"],
+        ingredients: [
+          "4 bone-in pork chops (1-inch thick)",
+          "1/2 cup BBQ sauce",
+          "2 tbsp brown sugar",
+          "1 tbsp olive oil",
+          "1 tsp garlic powder",
+          "1 tsp smoked paprika",
+          "Salt and pepper"
+        ],
+        steps: [
+          "Preheat oven to 400°F (200°C).",
+          "Mix garlic powder, paprika, salt, and pepper. Rub on both sides of pork chops.",
+          "Heat oil in an oven-safe skillet over high heat.",
+          "Sear pork chops 2-3 minutes per side until browned.",
+          "Mix BBQ sauce and brown sugar. Brush generously on top of each chop.",
+          "Transfer skillet to oven. Bake 12-15 minutes until internal temp reaches 145°F.",
+          "Let rest 5 minutes before serving (the temp will rise a bit more)."
+        ],
+        tip: "Letting meat rest after cooking is crucial! It allows the juices to redistribute, making every bite juicy instead of dry."
+      },
+      {
+        id: 9,
+        title: "Mediterranean Chicken Bowl",
+        emoji: "🥙",
+        protein: "chicken",
+        time: 30,
+        method: "stovetop",
+        proteinGrams: 44,
+        description: "Fresh, flavorful, and filling. A healthy bowl you'll actually crave!",
+        tags: ["Healthy", "Meal Prep", "Fresh"],
+        ingredients: [
+          "2 chicken breasts",
+          "1 cup cooked quinoa or rice",
+          "1 cucumber, diced",
+          "1 cup cherry tomatoes, halved",
+          "1/4 cup feta cheese",
+          "1/4 cup hummus",
+          "2 tbsp olive oil",
+          "Greek seasoning or oregano"
+        ],
+        steps: [
+          "Slice chicken breasts in half horizontally to make thinner cutlets.",
+          "Season with Greek seasoning, salt, and pepper.",
+          "Heat olive oil in a skillet over medium-high heat.",
+          "Cook chicken 4-5 minutes per side until golden and cooked through (165°F).",
+          "Let chicken rest 5 minutes, then slice into strips.",
+          "Build bowls: quinoa base, sliced chicken, cucumber, tomatoes.",
+          "Top with crumbled feta and a dollop of hummus. Drizzle with olive oil!"
+        ],
+        tip: "Slicing chicken breasts horizontally (butterflying) makes them cook faster and more evenly - no more dry chicken!"
+      },
+      {
+        id: 10,
+        title: "Air Fryer Chicken Tenders",
+        emoji: "🍗",
+        protein: "chicken",
+        time: 30,
+        method: "air-fryer",
+        proteinGrams: 40,
+        description: "Crispy on the outside, juicy inside. Healthier than fast food and WAY better!",
+        tags: ["Air Fryer", "Kid-Friendly", "Crispy"],
+        ingredients: [
+          "1.5 lbs chicken tenders",
+          "1 cup panko breadcrumbs",
+          "1/2 cup flour",
+          "2 eggs, beaten",
+          "1 tsp garlic powder",
+          "1 tsp paprika",
+          "Cooking spray",
+          "Salt and pepper"
+        ],
+        steps: [
+          "Set up breading station: flour in one bowl, beaten eggs in second, panko mixed with seasonings in third.",
+          "Dip each tender in flour, then egg, then panko. Press to coat well.",
+          "Preheat air fryer to 400°F for 3 minutes.",
+          "Place tenders in single layer (don't overcrowd). Spray lightly with cooking spray.",
+          "Air fry 8-10 minutes, flipping halfway through.",
+          "Check that internal temp reaches 165°F.",
+          "Serve with your favorite dipping sauce!"
+        ],
+        tip: "Don't skip preheating the air fryer! It ensures even cooking and maximum crispiness from the start."
+      },
+      {
+        id: 11,
+        title: "Egg Fried Rice",
+        emoji: "🍳",
+        protein: "eggs",
+        time: 15,
+        method: "stovetop",
+        proteinGrams: 18,
+        description: "Better than takeout! Use leftover rice for the best results.",
+        tags: ["Quick", "Budget-Friendly", "Use Leftovers"],
+        ingredients: [
+          "3 cups day-old cold rice",
+          "3 eggs, beaten",
+          "1 cup frozen peas and carrots",
+          "3 green onions, chopped",
+          "3 tbsp soy sauce",
+          "2 tbsp sesame oil",
+          "2 tbsp vegetable oil"
+        ],
+        steps: [
+          "Heat vegetable oil in a wok or large skillet over high heat.",
+          "Add frozen veggies. Stir-fry 2 minutes.",
+          "Push veggies to the side. Add beaten eggs to empty space.",
+          "Scramble eggs until just set, then mix with veggies.",
+          "Add cold rice. Break up any clumps and stir-fry 3-4 minutes.",
+          "Add soy sauce and sesame oil. Toss everything together.",
+          "Top with green onions and serve immediately!"
+        ],
+        tip: "Cold, day-old rice works best because it's dried out a bit. Fresh rice is too moist and will make your fried rice mushy."
+      },
+      {
+        id: 12,
+        title: "Greek Yogurt Protein Bowl",
+        emoji: "🥗",
+        protein: "eggs",
+        time: 15,
+        method: "no-cook",
+        proteinGrams: 32,
+        description: "No cooking required! A refreshing, protein-packed meal for hot days.",
+        tags: ["No-Cook", "Quick", "Healthy"],
+        ingredients: [
+          "1.5 cups Greek yogurt (plain or vanilla)",
+          "2 hard-boiled eggs, sliced",
+          "1/4 cup granola",
+          "1/2 cup mixed berries",
+          "2 tbsp honey",
+          "2 tbsp nut butter",
+          "1 tbsp chia seeds"
+        ],
+        steps: [
+          "Add Greek yogurt to a large bowl.",
+          "Arrange hard-boiled eggs, berries, and granola on top.",
+          "Drizzle with honey and nut butter.",
+          "Sprinkle with chia seeds.",
+          "Mix as you eat or enjoy in sections!"
+        ],
+        tip: "Hard-boiled eggs can be made ahead and stored in the fridge for up to a week. Meal prep win!"
+      }
+    ];
+
+    // Active filters
+    let activeFilters = {
+      protein: null,
+      time: null,
+      method: null
+    };
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      renderRecipes();
+      setupFilterListeners();
+    });
+
+    // Set up filter button listeners
+    function setupFilterListeners() {
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const filterType = btn.parentElement.dataset.filter;
+          const value = btn.dataset.value;
+
+          // Toggle filter
+          if (activeFilters[filterType] === value) {
+            activeFilters[filterType] = null;
+            btn.classList.remove('active');
+          } else {
+            // Remove active from siblings
+            btn.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            activeFilters[filterType] = value;
+            btn.classList.add('active');
+          }
+
+          renderRecipes();
+        });
+      });
+
+      // Close modal on overlay click
+      document.getElementById('modal').addEventListener('click', (e) => {
+        if (e.target.id === 'modal') {
+          closeModal();
+        }
+      });
+
+      // Close modal on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+      });
+    }
+
+    // Filter recipes
+    function filterRecipes() {
+      return recipes.filter(recipe => {
+        if (activeFilters.protein && recipe.protein !== activeFilters.protein) return false;
+        if (activeFilters.time && recipe.time > parseInt(activeFilters.time)) return false;
+        if (activeFilters.method && recipe.method !== activeFilters.method) return false;
+        return true;
+      });
+    }
+
+    // Render recipe cards
+    function renderRecipes() {
+      const grid = document.getElementById('recipeGrid');
+      const noResults = document.getElementById('noResults');
+      const filtered = filterRecipes();
+
+      document.getElementById('count').textContent = filtered.length;
+
+      if (filtered.length === 0) {
+        grid.style.display = 'none';
+        noResults.style.display = 'block';
+        return;
+      }
+
+      grid.style.display = 'grid';
+      noResults.style.display = 'none';
+
+      grid.innerHTML = filtered.map((recipe, index) => `
+        <article class="recipe-card" onclick="openRecipe(${recipe.id})" style="animation-delay: ${index * 0.05}s">
+          <div class="recipe-image">${recipe.emoji}</div>
+          <div class="recipe-content">
+            <h3 class="recipe-title">${recipe.title}</h3>
+            <div class="recipe-meta">
+              <span>⏱️ ${recipe.time} min</span>
+              <span class="protein-badge">${recipe.proteinGrams}g protein</span>
+            </div>
+            <p class="recipe-description">${recipe.description}</p>
+            <div class="recipe-tags">
+              ${recipe.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    // Open recipe modal
+    function openRecipe(id) {
+      const recipe = recipes.find(r => r.id === id);
+      if (!recipe) return;
+
+      document.getElementById('modalTitle').textContent = recipe.title;
+
+      document.getElementById('modalBody').innerHTML = `
+        <div class="modal-meta">
+          <div class="modal-meta-item">
+            <span class="icon">⏱️</span>
+            <span>${recipe.time} minutes</span>
+          </div>
+          <div class="modal-meta-item">
+            <span class="icon">💪</span>
+            <span>${recipe.proteinGrams}g protein per serving</span>
+          </div>
+          <div class="modal-meta-item">
+            <span class="icon">🍳</span>
+            <span>${recipe.method.charAt(0).toUpperCase() + recipe.method.slice(1)}</span>
+          </div>
+        </div>
+
+        <h3 class="section-title">🛒 Ingredients</h3>
+        <ul class="ingredients-list">
+          ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+        </ul>
+
+        <h3 class="section-title">📝 Steps</h3>
+        <ol class="steps-list">
+          ${recipe.steps.map(step => `<li>${step}</li>`).join('')}
+        </ol>
+
+        <div class="tip-box">
+          <h4>💡 Beginner Tip</h4>
+          <p>${recipe.tip}</p>
+        </div>
+      `;
+
+      document.getElementById('modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Close modal
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Clear all filters
+    function clearFilters() {
+      activeFilters = { protein: null, time: null, method: null };
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      renderRecipes();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kagami Technical Documentation | Agent Architecture</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #21262d;
+      --border: #30363d;
+      --text-primary: #e6edf3;
+      --text-secondary: #8b949e;
+      --text-muted: #6e7681;
+      --accent-blue: #58a6ff;
+      --accent-purple: #bc8cff;
+      --accent-green: #3fb950;
+      --accent-yellow: #d29922;
+      --accent-orange: #f0883e;
+      --accent-red: #f85149;
+      --accent-pink: #db61a2;
+      --accent-cyan: #39c5cf;
+      --code-bg: #0d1117;
+      --sidebar-width: 280px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    /* Layout */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border);
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 1.5rem;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sidebar-logo span {
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .sidebar-version {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .nav-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .nav-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+
+    .nav-links {
+      list-style: none;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+    }
+
+    .nav-links a.active {
+      color: var(--accent-blue);
+      background: rgba(88, 166, 255, 0.1);
+    }
+
+    .nav-links .chapter-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    /* Main Content */
+    .main {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      padding: 3rem;
+      max-width: 900px;
+    }
+
+    /* Header */
+    .page-header {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--text-primary), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+    }
+
+    /* Sections */
+    section {
+      margin-bottom: 4rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    h2 .icon {
+      font-size: 1.5rem;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 2rem 0 1rem;
+      color: var(--text-primary);
+    }
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.75rem;
+      color: var(--accent-blue);
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+    }
+
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      margin: 1rem 0 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+    }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+    }
+
+    :not(pre) > code {
+      background: var(--bg-tertiary);
+      padding: 0.2em 0.4em;
+      border-radius: 4px;
+      color: var(--accent-cyan);
+    }
+
+    .code-comment { color: var(--text-muted); }
+    .code-keyword { color: var(--accent-pink); }
+    .code-string { color: var(--accent-green); }
+    .code-number { color: var(--accent-orange); }
+    .code-function { color: var(--accent-purple); }
+    .code-type { color: var(--accent-cyan); }
+    .code-property { color: var(--accent-blue); }
+
+    /* Cards */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: var(--accent-blue);
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .card-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .card-body {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* Chapter Cards */
+    .chapter-card {
+      border-left: 4px solid;
+    }
+
+    .chapter-void { border-left-color: #6e40c9; }
+    .chapter-void .card-icon { background: rgba(110, 64, 201, 0.2); color: #a371f7; }
+
+    .chapter-spark { border-left-color: #f0883e; }
+    .chapter-spark .card-icon { background: rgba(240, 136, 62, 0.2); color: #f0883e; }
+
+    .chapter-forge { border-left-color: #f85149; }
+    .chapter-forge .card-icon { background: rgba(248, 81, 73, 0.2); color: #f85149; }
+
+    .chapter-flow { border-left-color: #58a6ff; }
+    .chapter-flow .card-icon { background: rgba(88, 166, 255, 0.2); color: #58a6ff; }
+
+    .chapter-nexus { border-left-color: #8957e5; }
+    .chapter-nexus .card-icon { background: rgba(137, 87, 229, 0.2); color: #a371f7; }
+
+    .chapter-beacon { border-left-color: #d29922; }
+    .chapter-beacon .card-icon { background: rgba(210, 153, 34, 0.2); color: #d29922; }
+
+    .chapter-grove { border-left-color: #3fb950; }
+    .chapter-grove .card-icon { background: rgba(63, 185, 80, 0.2); color: #3fb950; }
+
+    .chapter-crystal { border-left-color: #39c5cf; }
+    .chapter-crystal .card-icon { background: rgba(57, 197, 207, 0.2); color: #39c5cf; }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      color: var(--text-secondary);
+    }
+
+    td code {
+      color: var(--accent-cyan);
+    }
+
+    /* Info boxes */
+    .info-box {
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      border-left: 4px solid;
+    }
+
+    .info-box.note {
+      background: rgba(88, 166, 255, 0.1);
+      border-left-color: var(--accent-blue);
+    }
+
+    .info-box.warning {
+      background: rgba(210, 153, 34, 0.1);
+      border-left-color: var(--accent-yellow);
+    }
+
+    .info-box.tip {
+      background: rgba(63, 185, 80, 0.1);
+      border-left-color: var(--accent-green);
+    }
+
+    .info-box-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .info-box p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    /* Architecture diagram */
+    .architecture-diagram {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      overflow-x: auto;
+    }
+
+    .diagram-row {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .diagram-box {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1.25rem;
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .diagram-box.highlight {
+      border-color: var(--accent-purple);
+      background: rgba(188, 140, 255, 0.1);
+    }
+
+    .diagram-arrow {
+      color: var(--text-muted);
+      text-align: center;
+      margin: 0.5rem 0;
+    }
+
+    /* System stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .stat-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 0.25rem;
+    }
+
+    /* Lists */
+    ul, ol {
+      margin: 1rem 0 1.5rem 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 2rem 1.5rem;
+      }
+    }
+
+    /* Scroll animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* API explorer */
+    .api-method {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .method-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .method-get { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); }
+    .method-post { background: rgba(88, 166, 255, 0.2); color: var(--accent-blue); }
+    .method-event { background: rgba(188, 140, 255, 0.2); color: var(--accent-purple); }
+
+    .method-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <span>鏡</span> Kagami
+      </div>
+      <div class="sidebar-version">v2.0.0 • Technical Docs</div>
+
+      <div class="nav-section">
+        <div class="nav-title">Overview</div>
+        <ul class="nav-links">
+          <li><a href="#architecture">Architecture</a></li>
+          <li><a href="#performance">Performance Targets</a></li>
+        </ul>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-title">The Eight Chapters</div>
+        <ul class="nav-links">
+          <li><a href="#void"><span class="chapter-dot" style="background:#6e40c9"></span>The Void</a></li>
+          <li><a href="#spark"><span class="chapter-dot" style="background:#f0883e"></span>Ignition (Spark)</a></li>
+          <li><a href="#forge"><span class="chapter-dot" style="background:#f85149"></span>The Anvil (Forge)</a></li>
+          <li><a href="#flow"><span class="chapter-dot" style="background:#58a6ff"></span>Currents (Flow)</a></li>
+          <li><a href="#nexus"><span class="chapter-dot" style="background:#8957e5"></span>The Web (Nexus)</a></li>
+          <li><a href="#beacon"><span class="chapter-dot" style="background:#d29922"></span>Lighthouse (Beacon)</a></li>
+          <li><a href="#grove"><span class="chapter-dot" style="background:#3fb950"></span>The Grove</a></li>
+          <li><a href="#crystal"><span class="chapter-dot" style="background:#39c5cf"></span>Crystallization</a></li>
+        </ul>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-title">Core Systems</div>
+        <ul class="nav-links">
+          <li><a href="#particles">Particle System</a></li>
+          <li><a href="#physics">Physics Engine</a></li>
+          <li><a href="#audio">Audio System</a></li>
+          <li><a href="#events">Event Bus</a></li>
+        </ul>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-title">Advanced</div>
+        <ul class="nav-links">
+          <li><a href="#secrets">Hidden Mechanics</a></li>
+          <li><a href="#math">Mathematical Foundations</a></li>
+          <li><a href="#api">window.鏡 API</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+      <header class="page-header">
+        <h1 class="page-title">Kagami Agent Architecture</h1>
+        <p class="page-subtitle">
+          Technical documentation for the WebXR immersive experience framework.
+          Eight chapters, unified physics, generative audio, and hidden discovery layers.
+        </p>
+      </header>
+
+      <!-- Architecture Overview -->
+      <section id="architecture" class="fade-in">
+        <h2><span class="icon">🏗️</span> System Architecture</h2>
+        <p>
+          Kagami is built on a modular event-driven architecture where each system operates
+          independently but communicates through a central EventBus. This enables loose coupling
+          and easy extension.
+        </p>
+
+        <div class="architecture-diagram">
+          <div class="diagram-row">
+            <div class="diagram-box highlight">KagamiExperience</div>
+          </div>
+          <div class="diagram-arrow">↓ orchestrates</div>
+          <div class="diagram-row">
+            <div class="diagram-box">ParticleManager</div>
+            <div class="diagram-box">PhysicsSystem</div>
+            <div class="diagram-box">AudioManager</div>
+            <div class="diagram-box">SecretManager</div>
+          </div>
+          <div class="diagram-arrow">↓ communicate via</div>
+          <div class="diagram-row">
+            <div class="diagram-box highlight">EventBus</div>
+          </div>
+          <div class="diagram-arrow">↓ persists to</div>
+          <div class="diagram-row">
+            <div class="diagram-box">StateManager</div>
+          </div>
+        </div>
+
+        <h3>Directory Structure</h3>
+<pre><span class="code-comment">// Source organization</span>
+src/
+├── core/
+│   ├── <span class="code-type">KagamiExperience.ts</span>   <span class="code-comment">// Main orchestrator</span>
+│   └── <span class="code-type">EventBus.ts</span>          <span class="code-comment">// Pub/sub system</span>
+├── particles/
+│   ├── <span class="code-type">ParticleManager.ts</span>   <span class="code-comment">// Object pool + InstancedMesh</span>
+│   ├── <span class="code-type">ConstellationSystem.ts</span> <span class="code-comment">// Dynamic line connections</span>
+│   └── <span class="code-type">MouseTrail.ts</span>        <span class="code-comment">// Cursor-following particles</span>
+├── physics/
+│   ├── <span class="code-type">PhysicsSystem.ts</span>     <span class="code-comment">// Force aggregation</span>
+│   └── <span class="code-type">forces.ts</span>            <span class="code-comment">// Spring, magnetic, gravity</span>
+├── audio/
+│   ├── <span class="code-type">AudioManager.ts</span>      <span class="code-comment">// Web Audio orchestration</span>
+│   ├── <span class="code-type">AmbientDrone.ts</span>      <span class="code-comment">// Generative soundscape</span>
+│   └── <span class="code-type">SoundEffects.ts</span>      <span class="code-comment">// Synthesized interactions</span>
+├── mechanics/
+│   ├── <span class="code-type">SecretManager.ts</span>     <span class="code-comment">// Discovery tracking</span>
+│   ├── <span class="code-type">KonamiCode.ts</span>        <span class="code-comment">// ↑↑↓↓←→←→BA</span>
+│   ├── <span class="code-type">TypedSequence.ts</span>     <span class="code-comment">// Word detection</span>
+│   ├── <span class="code-type">ClickPattern.ts</span>      <span class="code-comment">// Click combos</span>
+│   └── <span class="code-type">GyroscopeHandler.ts</span>  <span class="code-comment">// Device orientation</span>
+└── state/
+    └── <span class="code-type">StateManager.ts</span>      <span class="code-comment">// localStorage persistence</span></pre>
+      </section>
+
+      <!-- Performance Targets -->
+      <section id="performance" class="fade-in">
+        <h2><span class="icon">⚡</span> Performance Targets</h2>
+        <p>Kagami is optimized for VR headsets with strict performance budgets.</p>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value">80</div>
+            <div class="stat-label">Max Particles</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">7</div>
+            <div class="stat-label">Max Lights</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">16.67</div>
+            <div class="stat-label">Frame Budget (ms)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">&lt;500</div>
+            <div class="stat-label">Memory (MB)</div>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Constraint</th>
+              <th>Value</th>
+              <th>Rationale</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>PERF.maxOrbs</code></td>
+              <td>80</td>
+              <td>Instanced rendering budget for Quest 2</td>
+            </tr>
+            <tr>
+              <td><code>PERF.maxLights</code></td>
+              <td>7</td>
+              <td>Forward rendering light limit</td>
+            </tr>
+            <tr>
+              <td>Frame time</td>
+              <td>16.67ms</td>
+              <td>60fps target for VR comfort</td>
+            </tr>
+            <tr>
+              <td>Draw calls</td>
+              <td>&lt;1000</td>
+              <td>GPU batching efficiency</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- The Eight Chapters -->
+      <section id="chapters" class="fade-in">
+        <h2><span class="icon">📖</span> The Eight Chapters</h2>
+        <p>
+          Each chapter represents a stage in the creative journey, with unique particle configurations,
+          physics behaviors, and audio signatures.
+        </p>
+
+        <!-- Chapter 0: The Void -->
+        <div id="void" class="card chapter-card chapter-void" style="margin-top: 2rem;">
+          <div class="card-header">
+            <div class="card-icon">🌑</div>
+            <div>
+              <div class="card-title">Chapter 0: The Void</div>
+              <div class="card-subtitle">Origin Point</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p>The origin of consciousness. Seven colonies emerge from emptiness, surrounded by 60 Kusama-inspired polka dots.</p>
+            <h4>Configuration</h4>
+<pre><span class="code-keyword">const</span> <span class="code-property">VOID_CONFIG</span> = {
+  <span class="code-property">particles</span>: <span class="code-number">67</span>,  <span class="code-comment">// 7 colonies + 60 dots</span>
+  <span class="code-property">gravityWell</span>: {
+    <span class="code-property">position</span>: <span class="code-keyword">new</span> <span class="code-type">Vector3</span>(<span class="code-number">0</span>, <span class="code-number">1.6</span>, <span class="code-number">-3</span>),
+    <span class="code-property">strength</span>: <span class="code-number">0.02</span>,
+    <span class="code-property">radius</span>: <span class="code-number">5</span>,
+    <span class="code-property">falloff</span>: <span class="code-string">'quadratic'</span>
+  },
+  <span class="code-property">audio</span>: { <span class="code-property">drone</span>: <span class="code-string">'minimal'</span>, <span class="code-property">filterCutoff</span>: <span class="code-number">200</span> }
+};</pre>
+          </div>
+        </div>
+
+        <!-- Chapter 1: Spark -->
+        <div id="spark" class="card chapter-card chapter-spark">
+          <div class="card-header">
+            <div class="card-icon">✨</div>
+            <div>
+              <div class="card-title">Chapter 1: Ignition (Spark)</div>
+              <div class="card-subtitle">Creative Explosion</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p>The moment of inspiration. 50 explosive particles burst outward with high velocity and rapid decay.</p>
+            <h4>Configuration</h4>
+<pre><span class="code-keyword">const</span> <span class="code-property">SPARK_CONFIG</span> = {
+  <span class="code-property">particles</span>: <span class="code-number">50</span>,
+  <span class="code-property">behavior</span>: <span class="code-string">'explosive'</span>,
+  <span class="code-property">velocity</span>: { <span class="code-property">min</span>: <span class="code-number">0.1</span>, <span class="code-property">max</span>: <span class="code-number">0.3</span> },
+  <span class="code-property">life</span>: { <span class="code-property">min</span>: <span class="code-number">0.5</span>, <span class="code-property">max</span>: <span class="code-number">2.0</span> },
+  <span class="code-property">color</span>: <span class="code-string">'#f0883e'</span>,
+  <span class="code-property">audio</span>: { <span class="code-property">drone</span>: <span class="code-string">'energetic'</span>, <span class="code-property">filterCutoff</span>: <span class="code-number">800</span> }
+};</pre>
+          </div>
+        </div>
+
+        <!-- Chapter 2: Forge -->
+        <div id="forge" class="card chapter-card chapter-forge">
+          <div class="card-header">
+            <div class="card-icon">🔥</div>
+            <div>
+              <div class="card-title">Chapter 2: The Anvil (Forge)</div>
+              <div class="card-subtitle">Transformation</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p>Ideas are hammered into form. 40 molten droplets rise with inverted gravity, defying expectations.</p>
+            <h4>Configuration</h4>
+<pre><span class="code-keyword">const</span> <span class="code-property">FORGE_CONFIG</span> = {
+  <span class="code-property">particles</span>: <span class="code-number">40</span>,
+  <span class="code-property">behavior</span>: <span class="code-string">'rising'</span>,
+  <span class="code-property">globalGravity</span>: <span class="code-keyword">new</span> <span class="code-type">Vector3</span>(<span class="code-number">0</span>, <span class="code-number">0.02</span>, <span class="code-number">0</span>), <span class="code-comment">// Inverted!</span>
+  <span class="code-property">color</span>: <span class="code-string">'#f85149'</span>,
+  <span class="code-property">audio</span>: { <span class="code-property">drone</span>: <span class="code-string">'intense'</span>, <span class="code-property">detuning</span>: <span class="code-number">20</span> }
+};</pre>
+          </div>
+        </div>
+
+        <!-- Chapter 3: Flow -->
+        <div id="flow" class="card chapter-card chapter-flow">
+          <div class="card-header">
+            <div class="card-icon">🌊</div>
+            <div>
+              <div class="card-title">Chapter 3: Currents (Flow)</div>
+              <div class="card-subtitle">Debugging Streams</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p>Finding the path of least resistance. 45 particles flow in 3 spiraling streams, visualizing debugging intuition.</p>
+            <h4>Configuration</h4>
+<pre><span class="code-keyword">const</span> <span class="code-property">FLOW_CONFIG</span> = {
+  <span class="code-property">particles</span>: <span class="code-number">45</span>,  <span class="code-comment">// 15 per stream × 3</span>
+  <span class="code-property">streams</span>: <span class="code-number">3</span>,
+  <span class="code-property">behavior</span>: <span class="code-string">'vortex'</span>,
+  <span class="code-property">vortexStrength</span>: <span class="code-number">0.03</span>,
+  <span class="code-property">gravityWell</span>: {
+    <span class="code-property">position</span>: <span class="code-keyword">new</span> <span class="code-type">Vector3</span>(<span class="code-number">0</span>, <span class="code-number">1.6</span>, <span class="code-number">-3</span>),
+    <span class="code-property">falloff</span>: <span class="code-string">'linear'</span>
+  },
+  <span class="code-property">color</span>: <span class="code-string">'#58a6ff'</span>
+};</pre>
+          </div>
+        </div>
+
+        <!-- Chapter 4: Nexus -->
+        <div id="nexus" class="card chapter-card chapter-nexus">
+          <div class="card-header">
+            <div class="card-icon">🕸️</div>
+            <div>
+              <div class="card-title">Chapter 4: The Web (Nexus)</div>
+              <div class="card-subtitle">Connection Network</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p>Everything connects. 12 network nodes with dynamic constellation lines showing the interconnected nature of ideas.</p>
+            <h4>Configuration</h4>
+<pre><span class="code-keyword">const</span> <span class="code-property">NEXUS_CONFIG</span> = {
+  <span class="code-property">nodes</span>: <span class="code-number">12</span>,
+  <span class="code-property">connectionParticles</span>: <span class="code-number">24</span>,
+  <span class="code-property">constellation</span>: {
+    <span class="code-property">enabled</span>: <span class="code-keyword">true</span>,
+    <span class="code-property">maxDistance</span>: <span class="code-number">2.0</span>,
+    <span class="code-property">lineOpacity</span>: <span class="code-number">0.4</span>
+  },
+  <span class="code-property">color</span>: <span class="code-string">'#a371f7'</span>
+};</pre>
+          </div>
+        </div>
+
+        <!-- Chapter 5: Beacon -->
+        <div id="beacon" class="card chapter-card chapter-beacon">
+          <div class="card-header">
+            <div class="card-icon">🗼</div>
+            <div>
+              <div class="card-title">Chapter 5: Lighthouse (Beacon)</div>
+              <div class="card-subtitle">Guiding Light</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p>A signal in the darkness. Central beacon emits 8 rays containing 48 orbs that pulse with Fibonacci timing.</p>
+            <h4>Configuration</h4>
+<pre><span class="code-keyword">const</span> <span class="code-property">BEACON_CONFIG</span> = {
+  <span class="code-property">centralOrb</span>: <span class="code-number">1</span>,
+  <span class="code-property">rays</span>: <span class="code-number">8</span>,
+  <span class="code-property">orbsPerRay</span>: <span class="code-number">6</span>,  <span class="code-comment">// Total: 1 + 8×6 = 49</span>
+  <span class="code-property">pulsePhase</span>: <span class="code-number">377</span>, <span class="code-comment">// Fibonacci ms</span>
+  <span class="code-property">color</span>: <span class="code-string">'#d29922'</span>,
+  <span class="code-property">audio</span>: { <span class="code-property">drone</span>: <span class="code-string">'warm'</span>, <span class="code-property">harmonics</span>: [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>] }
+};</pre>
+          </div>
+        </div>
+
+        <!-- Chapter 6: Grove -->
+        <div id="grove" class="card chapter-card chapter-grove">
+          <div class="card-header">
+            <div class="card-icon">🌳</div>
+            <div>
+              <div class="card-title">Chapter 6: The Grove</div>
+              <div class="card-subtitle">Organic Growth</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p>Ideas branch and multiply. Recursive tree structures grow organically, limited to 50 orbs for performance.</p>
+            <h4>Configuration</h4>
+<pre><span class="code-keyword">const</span> <span class="code-property">GROVE_CONFIG</span> = {
+  <span class="code-property">maxParticles</span>: <span class="code-number">50</span>,
+  <span class="code-property">behavior</span>: <span class="code-string">'branching'</span>,
+  <span class="code-property">branchAngle</span>: <span class="code-number">25</span>, <span class="code-comment">// degrees</span>
+  <span class="code-property">branchRatio</span>: <span class="code-number">0.7</span>, <span class="code-comment">// child/parent size</span>
+  <span class="code-property">maxDepth</span>: <span class="code-number">5</span>,
+  <span class="code-property">color</span>: <span class="code-string">'#3fb950'</span>,
+  <span class="code-property">audio</span>: { <span class="code-property">drone</span>: <span class="code-string">'organic'</span>, <span class="code-property">reverb</span>: <span class="code-number">0.6</span> }
+};</pre>
+          </div>
+        </div>
+
+        <!-- Chapter 7: Crystal -->
+        <div id="crystal" class="card chapter-card chapter-crystal">
+          <div class="card-header">
+            <div class="card-icon">💎</div>
+            <div>
+              <div class="card-title">Chapter 7: Crystallization</div>
+              <div class="card-subtitle">Perfect Form</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p>Ideas solidify into structure. An octahedron emerges: 6 vertices + 12 edge particles + 25 dust particles.</p>
+            <h4>Configuration</h4>
+<pre><span class="code-keyword">const</span> <span class="code-property">CRYSTAL_CONFIG</span> = {
+  <span class="code-property">vertices</span>: <span class="code-number">6</span>,  <span class="code-comment">// Octahedron</span>
+  <span class="code-property">edges</span>: <span class="code-number">12</span>,
+  <span class="code-property">dust</span>: <span class="code-number">25</span>,
+  <span class="code-property">gravityWells</span>: [
+    { <span class="code-property">position</span>: [<span class="code-number">0</span>, <span class="code-number">3</span>, <span class="code-number">-3</span>], <span class="code-property">strength</span>: <span class="code-number">0.03</span> },
+    { <span class="code-property">position</span>: [<span class="code-number">0</span>, <span class="code-number">0</span>, <span class="code-number">-3</span>], <span class="code-property">strength</span>: <span class="code-number">0.03</span> },
+    <span class="code-comment">// ... 4 more vertices</span>
+  ],
+  <span class="code-property">color</span>: <span class="code-string">'#39c5cf'</span>,
+  <span class="code-property">audio</span>: { <span class="code-property">drone</span>: <span class="code-string">'crystalline'</span>, <span class="code-property">shimmer</span>: <span class="code-keyword">true</span> }
+};</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Particle System -->
+      <section id="particles" class="fade-in">
+        <h2><span class="icon">✨</span> Particle System</h2>
+        <p>
+          The ParticleManager uses <code>THREE.InstancedMesh</code> for single draw-call rendering
+          of up to 80 particles. Object pooling eliminates GC pressure.
+        </p>
+
+        <h3>Particle Structure</h3>
+<pre><span class="code-keyword">interface</span> <span class="code-type">Particle</span> {
+  <span class="code-property">id</span>: <span class="code-type">number</span>;
+  <span class="code-property">active</span>: <span class="code-type">boolean</span>;
+  <span class="code-property">position</span>: <span class="code-type">Vector3</span>;
+  <span class="code-property">velocity</span>: <span class="code-type">Vector3</span>;
+  <span class="code-property">acceleration</span>: <span class="code-type">Vector3</span>;
+  <span class="code-property">targetPosition</span>: <span class="code-type">Vector3</span> | <span class="code-keyword">null</span>;
+  <span class="code-property">life</span>: <span class="code-type">number</span>;
+  <span class="code-property">maxLife</span>: <span class="code-type">number</span>;
+  <span class="code-property">color</span>: <span class="code-type">Color</span>;
+  <span class="code-property">size</span>: <span class="code-type">number</span>;
+  <span class="code-property">baseSize</span>: <span class="code-type">number</span>;
+  <span class="code-property">colony</span>: <span class="code-type">ColonyType</span> | <span class="code-keyword">null</span>;
+}</pre>
+
+        <h3>Constellation System</h3>
+        <p>
+          Dynamic lines connect nearby particles using <strong>spatial hashing</strong> for O(n) neighbor lookup
+          instead of O(n²) brute force.
+        </p>
+<pre><span class="code-keyword">class</span> <span class="code-type">SpatialHash</span> {
+  <span class="code-keyword">private</span> <span class="code-property">cellSize</span>: <span class="code-type">number</span>;
+  <span class="code-keyword">private</span> <span class="code-property">cells</span>: <span class="code-type">Map</span>&lt;<span class="code-type">string</span>, <span class="code-type">Particle</span>[]&gt;;
+
+  <span class="code-function">hash</span>(<span class="code-property">position</span>: <span class="code-type">Vector3</span>): <span class="code-type">string</span> {
+    <span class="code-keyword">const</span> x = <span class="code-type">Math</span>.<span class="code-function">floor</span>(position.x / <span class="code-keyword">this</span>.cellSize);
+    <span class="code-keyword">const</span> y = <span class="code-type">Math</span>.<span class="code-function">floor</span>(position.y / <span class="code-keyword">this</span>.cellSize);
+    <span class="code-keyword">const</span> z = <span class="code-type">Math</span>.<span class="code-function">floor</span>(position.z / <span class="code-keyword">this</span>.cellSize);
+    <span class="code-keyword">return</span> <span class="code-string">`</span>${x}<span class="code-string">,</span>${y}<span class="code-string">,</span>${z}<span class="code-string">`</span>;
+  }
+}</pre>
+      </section>
+
+      <!-- Physics Engine -->
+      <section id="physics" class="fade-in">
+        <h2><span class="icon">🎯</span> Physics Engine</h2>
+        <p>
+          The PhysicsSystem aggregates multiple force types and applies them to particles each frame.
+          All forces are computed per-particle and summed before integration.
+        </p>
+
+        <h3>Available Forces</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Force Type</th>
+              <th>Function</th>
+              <th>Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Spring</td>
+              <td><code>calculateSpringForce()</code></td>
+              <td>Particles returning to targets</td>
+            </tr>
+            <tr>
+              <td>Magnetic</td>
+              <td><code>calculateMagneticForce()</code></td>
+              <td>Cursor attraction/repulsion</td>
+            </tr>
+            <tr>
+              <td>Gravity</td>
+              <td><code>calculateGravityForce()</code></td>
+              <td>Point attractors (gravity wells)</td>
+            </tr>
+            <tr>
+              <td>Vortex</td>
+              <td><code>calculateVortexForce()</code></td>
+              <td>Spiral flow patterns</td>
+            </tr>
+            <tr>
+              <td>Turbulence</td>
+              <td><code>calculateTurbulenceForce()</code></td>
+              <td>Organic noise motion</td>
+            </tr>
+            <tr>
+              <td>Boundary</td>
+              <td><code>calculateBoundaryForce()</code></td>
+              <td>Soft containment</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Spring Dynamics (Hooke's Law)</h3>
+<pre><span class="code-keyword">function</span> <span class="code-function">calculateSpringForce</span>(
+  <span class="code-property">position</span>: <span class="code-type">Vector3</span>,
+  <span class="code-property">target</span>: <span class="code-type">Vector3</span>,
+  <span class="code-property">velocity</span>: <span class="code-type">Vector3</span>,
+  <span class="code-property">stiffness</span>: <span class="code-type">number</span>,  <span class="code-comment">// k coefficient</span>
+  <span class="code-property">damping</span>: <span class="code-type">number</span>     <span class="code-comment">// friction</span>
+): <span class="code-type">Vector3</span> {
+  <span class="code-comment">// F = -k * displacement - damping * velocity</span>
+  <span class="code-keyword">const</span> displacement = position.<span class="code-function">clone</span>().<span class="code-function">sub</span>(target);
+  <span class="code-keyword">const</span> springForce = displacement.<span class="code-function">multiplyScalar</span>(-stiffness);
+  <span class="code-keyword">const</span> dampingForce = velocity.<span class="code-function">clone</span>().<span class="code-function">multiplyScalar</span>(-damping);
+  <span class="code-keyword">return</span> springForce.<span class="code-function">add</span>(dampingForce);
+}</pre>
+
+        <h3>Magnetic Cursor</h3>
+        <p>
+          Particles are attracted to (or repelled from) the cursor position.
+          Hold <kbd>Shift</kbd> to toggle repulsion mode.
+        </p>
+<pre><span class="code-comment">// Inverse square falloff with smoothing</span>
+<span class="code-keyword">const</span> falloff = <span class="code-number">1</span> - (distance / radius);
+<span class="code-keyword">const</span> magnitude = strength * falloff * falloff;
+<span class="code-keyword">const</span> force = direction.<span class="code-function">normalize</span>().<span class="code-function">multiplyScalar</span>(magnitude);</pre>
+      </section>
+
+      <!-- Audio System -->
+      <section id="audio" class="fade-in">
+        <h2><span class="icon">🔊</span> Audio System</h2>
+        <p>
+          Generative audio using Web Audio API. No audio files — everything is synthesized in real-time.
+        </p>
+
+        <h3>Ambient Drone</h3>
+        <p>Three oscillators create a rich, evolving drone that responds to chapter changes:</p>
+<pre><span class="code-keyword">const</span> <span class="code-property">DRONE_FREQUENCIES</span> = {
+  <span class="code-property">bass</span>: <span class="code-number">55</span>,    <span class="code-comment">// A1</span>
+  <span class="code-property">mid</span>: <span class="code-number">110</span>,    <span class="code-comment">// A2</span>
+  <span class="code-property">high</span>: <span class="code-number">165</span>    <span class="code-comment">// E3 (perfect fifth)</span>
+};
+
+<span class="code-comment">// Chapter variations modify:</span>
+<span class="code-comment">// - Filter cutoff (200-2000 Hz)</span>
+<span class="code-comment">// - Oscillator detuning (0-50 cents)</span>
+<span class="code-comment">// - Reverb wet/dry mix</span></pre>
+
+        <h3>Synthesized Sound Effects</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Sound</th>
+              <th>Duration</th>
+              <th>Technique</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>click</code></td>
+              <td>89ms</td>
+              <td>Sine envelope with quick decay</td>
+            </tr>
+            <tr>
+              <td><code>discover</code></td>
+              <td>377ms</td>
+              <td>Rising frequency sweep</td>
+            </tr>
+            <tr>
+              <td><code>chapter</code></td>
+              <td>610ms</td>
+              <td>Chord swell (root + fifth + octave)</td>
+            </tr>
+            <tr>
+              <td><code>secret</code></td>
+              <td>987ms</td>
+              <td>Bell tone with long reverb tail</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="info-box note">
+          <div class="info-box-title">📝 Note</div>
+          <p>All durations are Fibonacci numbers (89, 377, 610, 987ms) for mathematical harmony.</p>
+        </div>
+      </section>
+
+      <!-- Event Bus -->
+      <section id="events" class="fade-in">
+        <h2><span class="icon">📡</span> Event Bus</h2>
+        <p>
+          Type-safe pub/sub system for decoupled communication between systems.
+        </p>
+
+<pre><span class="code-keyword">type</span> <span class="code-type">EventMap</span> = {
+  <span class="code-string">'particle:spawn'</span>: { <span class="code-property">count</span>: <span class="code-type">number</span>; <span class="code-property">color</span>?: <span class="code-type">string</span>; <span class="code-property">position</span>?: <span class="code-type">Vector3</span> };
+  <span class="code-string">'particle:burst'</span>: { <span class="code-property">intensity</span>: <span class="code-type">number</span> };
+  <span class="code-string">'particle:clear'</span>: <span class="code-type">void</span>;
+  <span class="code-string">'chapter:enter'</span>: { <span class="code-property">index</span>: <span class="code-type">number</span>; <span class="code-property">name</span>: <span class="code-type">string</span> };
+  <span class="code-string">'secret:discovered'</span>: { <span class="code-property">id</span>: <span class="code-type">string</span>; <span class="code-property">name</span>: <span class="code-type">string</span> };
+  <span class="code-string">'audio:trigger'</span>: { <span class="code-property">sound</span>: <span class="code-type">SoundType</span> };
+  <span class="code-string">'physics:magnetic'</span>: { <span class="code-property">active</span>: <span class="code-type">boolean</span>; <span class="code-property">repel</span>?: <span class="code-type">boolean</span> };
+  <span class="code-string">'physics:shake'</span>: { <span class="code-property">intensity</span>: <span class="code-type">number</span> };
+};
+
+<span class="code-comment">// Usage</span>
+eventBus.<span class="code-function">emit</span>(<span class="code-string">'particle:burst'</span>, { <span class="code-property">intensity</span>: <span class="code-number">1.5</span> });
+eventBus.<span class="code-function">on</span>(<span class="code-string">'secret:discovered'</span>, (e) => <span class="code-function">console.log</span>(e.payload.name));</pre>
+      </section>
+
+      <!-- Hidden Mechanics -->
+      <section id="secrets" class="fade-in">
+        <h2><span class="icon">🔮</span> Hidden Mechanics</h2>
+        <p>
+          Discovery layers reward curious users. 10 secrets are tracked and persisted to localStorage.
+        </p>
+
+        <h3>Secret Registry</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Trigger</th>
+              <th>Reward</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>konami</code></td>
+              <td>↑↑↓↓←→←→BA</td>
+              <td>Transcendent particle mode</td>
+            </tr>
+            <tr>
+              <td><code>mirror_word</code></td>
+              <td>Type "mirror"</td>
+              <td>Golden flash effect</td>
+            </tr>
+            <tr>
+              <td><code>colony_word</code></td>
+              <td>Type "colony"</td>
+              <td>Show all 7 colony icons</td>
+            </tr>
+            <tr>
+              <td><code>kagami_word</code></td>
+              <td>Type "kagami"</td>
+              <td>Japanese UI mode</td>
+            </tr>
+            <tr>
+              <td><code>kusama_word</code></td>
+              <td>Type "kusama"</td>
+              <td>Polka dot explosion</td>
+            </tr>
+            <tr>
+              <td><code>triple_click</code></td>
+              <td>Triple click (500ms)</td>
+              <td>Particle burst</td>
+            </tr>
+            <tr>
+              <td><code>long_press</code></td>
+              <td>Hold click 1 second</td>
+              <td>Magnetic repulsion</td>
+            </tr>
+            <tr>
+              <td><code>device_shake</code></td>
+              <td>Shake device</td>
+              <td>Snow globe scatter</td>
+            </tr>
+            <tr>
+              <td><code>all_chapters</code></td>
+              <td>Visit all 8 chapters</td>
+              <td>Unlock gallery mode</td>
+            </tr>
+            <tr>
+              <td><code>console_explorer</code></td>
+              <td>Call <code>window.鏡.reflect()</code></td>
+              <td>Console Easter egg</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Konami Code Detector</h3>
+<pre><span class="code-keyword">const</span> <span class="code-property">KONAMI_SEQUENCE</span> = [
+  <span class="code-string">'ArrowUp'</span>, <span class="code-string">'ArrowUp'</span>,
+  <span class="code-string">'ArrowDown'</span>, <span class="code-string">'ArrowDown'</span>,
+  <span class="code-string">'ArrowLeft'</span>, <span class="code-string">'ArrowRight'</span>,
+  <span class="code-string">'ArrowLeft'</span>, <span class="code-string">'ArrowRight'</span>,
+  <span class="code-string">'KeyB'</span>, <span class="code-string">'KeyA'</span>
+];
+
+<span class="code-keyword">const</span> <span class="code-property">TIMEOUT</span> = <span class="code-number">2000</span>; <span class="code-comment">// Reset after 2s of inactivity</span></pre>
+      </section>
+
+      <!-- Mathematical Foundations -->
+      <section id="math" class="fade-in">
+        <h2><span class="icon">📐</span> Mathematical Foundations</h2>
+
+        <h3>Fibonacci Timing</h3>
+        <p>All animation durations use Fibonacci numbers for natural rhythm:</p>
+<pre><span class="code-keyword">const</span> <span class="code-property">FIBONACCI_MS</span> = [<span class="code-number">89</span>, <span class="code-number">144</span>, <span class="code-number">233</span>, <span class="code-number">377</span>, <span class="code-number">610</span>, <span class="code-number">987</span>];
+
+<span class="code-comment">// Used for:</span>
+<span class="code-comment">// - Sound effect durations</span>
+<span class="code-comment">// - Animation keyframes</span>
+<span class="code-comment">// - Breathing pulse phases</span>
+<span class="code-comment">// - Drone modulation cycles</span></pre>
+
+        <h3>Catastrophe Theory Easing</h3>
+        <p>Advanced easing functions based on mathematical catastrophe theory:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Catastrophe</th>
+              <th>Type</th>
+              <th>Behavior</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Fold (A₂)</td>
+              <td><code>foldEase</code></td>
+              <td>Sudden emergence from nothing</td>
+            </tr>
+            <tr>
+              <td>Cusp (A₃)</td>
+              <td><code>cuspEase</code></td>
+              <td>Decisive transition point</td>
+            </tr>
+            <tr>
+              <td>Swallowtail (A₄)</td>
+              <td><code>swallowtailEase</code></td>
+              <td>Recovery arc with overshoot</td>
+            </tr>
+            <tr>
+              <td>Butterfly (A₅)</td>
+              <td><code>butterflyEase</code></td>
+              <td>Complex oscillating transition</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Fano Plane Structure</h3>
+        <p>The seven colonies are arranged according to the Fano plane — a finite projective geometry:</p>
+<pre><span class="code-comment">// 7 points, 7 lines, 3 points per line</span>
+<span class="code-keyword">const</span> <span class="code-property">FANO_LINES</span> = [
+  [<span class="code-number">0</span>, <span class="code-number">1</span>, <span class="code-number">2</span>],  <span class="code-comment">// Line 1</span>
+  [<span class="code-number">0</span>, <span class="code-number">3</span>, <span class="code-number">4</span>],  <span class="code-comment">// Line 2</span>
+  [<span class="code-number">0</span>, <span class="code-number">5</span>, <span class="code-number">6</span>],  <span class="code-comment">// Line 3</span>
+  [<span class="code-number">1</span>, <span class="code-number">3</span>, <span class="code-number">5</span>],  <span class="code-comment">// Line 4</span>
+  [<span class="code-number">1</span>, <span class="code-number">4</span>, <span class="code-number">6</span>],  <span class="code-comment">// Line 5</span>
+  [<span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">6</span>],  <span class="code-comment">// Line 6</span>
+  [<span class="code-number">2</span>, <span class="code-number">4</span>, <span class="code-number">5</span>],  <span class="code-comment">// Line 7 (curved)</span>
+];</pre>
+      </section>
+
+      <!-- window.鏡 API -->
+      <section id="api" class="fade-in">
+        <h2><span class="icon">🪞</span> window.鏡 API</h2>
+        <p>
+          Public JavaScript API exposed on <code>window.鏡</code> (or <code>window.kagami</code>)
+          for console exploration and external integration.
+        </p>
+
+        <h3>Properties</h3>
+        <div class="api-method">
+          <span class="method-badge method-get">GET</span>
+          <span class="method-name">window.鏡.chapters</span>
+        </div>
+        <p>Array of all 8 chapter definitions.</p>
+
+        <div class="api-method">
+          <span class="method-badge method-get">GET</span>
+          <span class="method-name">window.鏡.colonies</span>
+        </div>
+        <p>Object containing the 7 colony colors and metadata.</p>
+
+        <div class="api-method">
+          <span class="method-badge method-get">GET</span>
+          <span class="method-name">window.鏡.axioms</span>
+        </div>
+        <p>The five guiding axioms of Kagami.</p>
+
+        <div class="api-method">
+          <span class="method-badge method-get">GET</span>
+          <span class="method-name">window.鏡.stats</span>
+        </div>
+        <p>User statistics: visitCount, secretsFound, totalSecrets, timeSpent.</p>
+
+        <h3>Methods</h3>
+        <div class="api-method">
+          <span class="method-badge method-post">CALL</span>
+          <span class="method-name">window.鏡.reflect()</span>
+        </div>
+        <p>Prints philosophical reflection to console. Unlocks <code>console_explorer</code> secret.</p>
+
+        <div class="api-method">
+          <span class="method-badge method-post">CALL</span>
+          <span class="method-name">window.鏡.summon(colony: string)</span>
+        </div>
+        <p>Triggers animation for specified colony.</p>
+
+        <div class="api-method">
+          <span class="method-badge method-post">CALL</span>
+          <span class="method-name">window.鏡.secrets.list()</span>
+        </div>
+        <p>Returns array of discovered secret IDs.</p>
+
+        <div class="api-method">
+          <span class="method-badge method-post">CALL</span>
+          <span class="method-name">window.鏡.secrets.check(name: string)</span>
+        </div>
+        <p>Returns boolean for whether secret is discovered.</p>
+
+        <h3>Developer Methods</h3>
+<pre><span class="code-comment">// Hidden dev tools under _dev namespace</span>
+window.鏡.<span class="code-property">_dev</span>.<span class="code-function">spawnParticles</span>(<span class="code-number">20</span>);
+window.鏡.<span class="code-property">_dev</span>.<span class="code-function">setChapter</span>(<span class="code-number">3</span>);
+window.鏡.<span class="code-property">_dev</span>.<span class="code-function">toggleAudio</span>();
+window.鏡.<span class="code-property">_dev</span>.<span class="code-function">clearSecrets</span>();</pre>
+      </section>
+
+      <!-- Footer -->
+      <footer style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+        <p>鏡 Kagami v2.0.0 • <a href="https://github.com/kazcoby/kagami" style="color: var(--accent-blue); text-decoration: none;">GitHub</a></p>
+        <p style="margin-top: 0.5rem; font-style: italic;">"In the mirror, we see not what is, but what could be."</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // Scroll animation
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Active nav link
+    const sections = document.querySelectorAll('section[id], div[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (scrollY >= sectionTop - 100) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
