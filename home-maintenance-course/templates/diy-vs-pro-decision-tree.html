@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>DIY vs Pro Decision Tree</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.5; max-width: 900px; margin: 0 auto; padding: 20px; color: #333; }
+    h1 { color: #2d5a27; text-align: center; border-bottom: 3px solid #2d5a27; padding-bottom: 10px; }
+    h2 { color: #1a73e8; margin-top: 30px; }
+    h3 { color: #333; margin-top: 20px; }
+    .print-note { background: #f5f5f5; padding: 10px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9em; }
+
+    /* Visual Decision Tree */
+    .tree-container { margin: 30px 0; }
+    .decision-box { background: #e3f2fd; border: 2px solid #1a73e8; border-radius: 8px; padding: 15px; margin: 10px auto; max-width: 400px; text-align: center; }
+    .question { font-weight: bold; font-size: 1.1em; }
+    .arrow-container { text-align: center; margin: 5px 0; }
+    .arrow { font-size: 1.5em; color: #666; }
+    .options { display: flex; justify-content: center; gap: 40px; margin: 10px 0; }
+    .option { padding: 5px 15px; font-weight: bold; }
+    .yes { color: #2d5a27; }
+    .no { color: #c62828; }
+    .diy-box { background: #e8f5e9; border: 2px solid #2d5a27; border-radius: 8px; padding: 15px; margin: 10px; text-align: center; }
+    .pro-box { background: #ffebee; border: 2px solid #c62828; border-radius: 8px; padding: 15px; margin: 10px; text-align: center; }
+    .result { display: flex; justify-content: center; gap: 20px; margin-top: 10px; }
+
+    /* Text Alternative */
+    .text-alt { background: #f5f5f5; border-radius: 8px; padding: 20px; margin: 30px 0; }
+    .category { background: white; border-radius: 8px; padding: 15px; margin: 15px 0; border-left: 4px solid #1a73e8; }
+    .category-diy { border-left-color: #2d5a27; }
+    .category-pro { border-left-color: #c62828; }
+    .category-maybe { border-left-color: #ff9800; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background: #e3f2fd; }
+    .diy { color: #2d5a27; font-weight: bold; }
+    .pro { color: #c62828; font-weight: bold; }
+    .depends { color: #ff9800; font-weight: bold; }
+
+    @media print {
+      .print-note { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <h1>DIY vs. Call a Pro: Decision Guide</h1>
+
+  <div class="print-note">
+    <strong>Instructions:</strong> Use this guide when you encounter a home issue. Start with the visual flowchart, then check the detailed reference table below. When in doubt, it's always safer to call a professional.
+  </div>
+
+  <h2>Quick Decision Flowchart</h2>
+
+  <div class="tree-container">
+    <div class="decision-box">
+      <p class="question">Is this an EMERGENCY?</p>
+      <p>(Gas leak, flooding, electrical fire, no heat in freezing weather)</p>
+    </div>
+    <div class="options">
+      <span class="option yes">YES →</span>
+      <span class="option no">NO ↓</span>
+    </div>
+    <div class="result">
+      <div class="pro-box" style="max-width: 200px;">
+        <strong>CALL 911 or utility company IMMEDIATELY</strong>
+        <p>Then call a pro</p>
+      </div>
+    </div>
+
+    <div class="arrow-container"><span class="arrow">↓</span></div>
+
+    <div class="decision-box">
+      <p class="question">Does it involve GAS, ELECTRICAL WIRING, or STRUCTURAL elements?</p>
+    </div>
+    <div class="options">
+      <span class="option yes">YES →</span>
+      <span class="option no">NO ↓</span>
+    </div>
+    <div class="result">
+      <div class="pro-box" style="max-width: 200px;">
+        <strong>CALL A PRO</strong>
+        <p>Licensed professionals required</p>
+      </div>
+    </div>
+
+    <div class="arrow-container"><span class="arrow">↓</span></div>
+
+    <div class="decision-box">
+      <p class="question">Do you have the TOOLS and SKILLS to do it safely?</p>
+    </div>
+    <div class="options">
+      <span class="option yes">YES ↓</span>
+      <span class="option no">NO →</span>
+    </div>
+    <div class="result">
+      <div></div>
+      <div class="pro-box" style="max-width: 200px;">
+        <strong>CALL A PRO</strong>
+        <p>Or learn first, then try</p>
+      </div>
+    </div>
+
+    <div class="arrow-container"><span class="arrow">↓</span></div>
+
+    <div class="decision-box">
+      <p class="question">Will a mistake cause MAJOR DAMAGE or be DANGEROUS?</p>
+    </div>
+    <div class="options">
+      <span class="option yes">YES →</span>
+      <span class="option no">NO ↓</span>
+    </div>
+    <div class="result">
+      <div></div>
+      <div class="pro-box" style="max-width: 200px;">
+        <strong>CALL A PRO</strong>
+        <p>Not worth the risk</p>
+      </div>
+    </div>
+
+    <div class="arrow-container"><span class="arrow">↓</span></div>
+
+    <div class="diy-box" style="max-width: 400px; margin: 10px auto;">
+      <strong>DIY!</strong>
+      <p>Research the job, take your time, and proceed carefully</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <h2>Text Alternative: DIY vs. Pro Reference Guide</h2>
+
+  <div class="text-alt">
+    <p>The decision flowchart above asks these questions in order:</p>
+    <ol>
+      <li><strong>Is this an emergency?</strong> (gas leak, flooding, fire, dangerous cold) → If YES, call 911 or emergency services immediately</li>
+      <li><strong>Does it involve gas, electrical wiring, or structural elements?</strong> → If YES, call a licensed professional</li>
+      <li><strong>Do you have the tools and skills?</strong> → If NO, call a pro or learn first</li>
+      <li><strong>Could a mistake cause major damage or be dangerous?</strong> → If YES, call a pro</li>
+      <li>If you answered NO to all danger questions and YES to having skills → DIY is appropriate</li>
+    </ol>
+  </div>
+
+  <h2>Detailed Reference by Category</h2>
+
+  <h3>Plumbing</h3>
+  <table>
+    <tr>
+      <th>Task</th>
+      <th>DIY or Pro?</th>
+      <th>Notes</th>
+    </tr>
+    <tr>
+      <td>Unclog a drain (plunger or snake)</td>
+      <td class="diy">DIY</td>
+      <td>Try plunger first, then hand snake</td>
+    </tr>
+    <tr>
+      <td>Replace toilet flapper</td>
+      <td class="diy">DIY</td>
+      <td>$5-15, 15 minutes</td>
+    </tr>
+    <tr>
+      <td>Adjust toilet fill valve/float</td>
+      <td class="diy">DIY</td>
+      <td>No parts needed usually</td>
+    </tr>
+    <tr>
+      <td>Replace toilet fill valve</td>
+      <td class="diy">DIY</td>
+      <td>$10-20, 30 minutes</td>
+    </tr>
+    <tr>
+      <td>Clean P-trap</td>
+      <td class="diy">DIY</td>
+      <td>Keep bucket underneath</td>
+    </tr>
+    <tr>
+      <td>Replace faucet aerator</td>
+      <td class="diy">DIY</td>
+      <td>Unscrew old, screw in new</td>
+    </tr>
+    <tr>
+      <td>Fix garbage disposal jam</td>
+      <td class="diy">DIY</td>
+      <td>Use Allen key in bottom, never reach inside</td>
+    </tr>
+    <tr>
+      <td>Replace toilet (complete)</td>
+      <td class="depends">Depends</td>
+      <td>DIY possible but often better left to pro</td>
+    </tr>
+    <tr>
+      <td>Install new faucet</td>
+      <td class="depends">Depends</td>
+      <td>DIY if comfortable; pros are faster</td>
+    </tr>
+    <tr>
+      <td>Water heater repair/replacement</td>
+      <td class="pro">PRO</td>
+      <td>Gas/electrical connections, permits often needed</td>
+    </tr>
+    <tr>
+      <td>Main line clog/sewer issues</td>
+      <td class="pro">PRO</td>
+      <td>Requires specialized equipment</td>
+    </tr>
+    <tr>
+      <td>Pipe replacement</td>
+      <td class="pro">PRO</td>
+      <td>Licensed plumber required</td>
+    </tr>
+    <tr>
+      <td>Leak behind wall/in foundation</td>
+      <td class="pro">PRO</td>
+      <td>Access and proper repair critical</td>
+    </tr>
+  </table>
+
+  <h3>Electrical</h3>
+  <table>
+    <tr>
+      <th>Task</th>
+      <th>DIY or Pro?</th>
+      <th>Notes</th>
+    </tr>
+    <tr>
+      <td>Replace light bulbs</td>
+      <td class="diy">DIY</td>
+      <td>Make sure power is off for stuck bulbs</td>
+    </tr>
+    <tr>
+      <td>Reset tripped breaker</td>
+      <td class="diy">DIY</td>
+      <td>Turn fully off, then on</td>
+    </tr>
+    <tr>
+      <td>Reset GFCI outlet</td>
+      <td class="diy">DIY</td>
+      <td>Press reset button</td>
+    </tr>
+    <tr>
+      <td>Replace batteries (smoke detector, thermostat)</td>
+      <td class="diy">DIY</td>
+      <td>Use correct battery type</td>
+    </tr>
+    <tr>
+      <td>Replace outlet/switch covers</td>
+      <td class="diy">DIY</td>
+      <td>No electrical work involved</td>
+    </tr>
+    <tr>
+      <td>Replace light fixture (swap same type)</td>
+      <td class="depends">Depends</td>
+      <td>DIY if comfortable with power off; pro if uncertain</td>
+    </tr>
+    <tr>
+      <td>Replace outlet or switch</td>
+      <td class="pro">PRO</td>
+      <td>Licensed electrician recommended</td>
+    </tr>
+    <tr>
+      <td>Add new outlet or circuit</td>
+      <td class="pro">PRO</td>
+      <td>Permits and licensed electrician required</td>
+    </tr>
+    <tr>
+      <td>Any work in electrical panel</td>
+      <td class="pro">PRO</td>
+      <td>Extremely dangerous—never DIY</td>
+    </tr>
+    <tr>
+      <td>Electrical troubleshooting (circuit won't work)</td>
+      <td class="pro">PRO</td>
+      <td>Could indicate dangerous problem</td>
+    </tr>
+  </table>
+
+  <h3>HVAC</h3>
+  <table>
+    <tr>
+      <th>Task</th>
+      <th>DIY or Pro?</th>
+      <th>Notes</th>
+    </tr>
+    <tr>
+      <td>Replace air filter</td>
+      <td class="diy">DIY</td>
+      <td>Most important DIY maintenance task</td>
+    </tr>
+    <tr>
+      <td>Program thermostat</td>
+      <td class="diy">DIY</td>
+      <td>Read manual or look up model</td>
+    </tr>
+    <tr>
+      <td>Clean A/C outdoor unit (debris removal)</td>
+      <td class="diy">DIY</td>
+      <td>Trim plants, remove debris, gentle hose</td>
+    </tr>
+    <tr>
+      <td>Clean vents and registers</td>
+      <td class="diy">DIY</td>
+      <td>Vacuum and wipe down</td>
+    </tr>
+    <tr>
+      <td>Replace thermostat (same wiring)</td>
+      <td class="depends">Depends</td>
+      <td>DIY possible; take photo of old wires first</td>
+    </tr>
+    <tr>
+      <td>Annual tune-up/inspection</td>
+      <td class="pro">PRO</td>
+      <td>Preventive maintenance by licensed tech</td>
+    </tr>
+    <tr>
+      <td>Refrigerant issues</td>
+      <td class="pro">PRO</td>
+      <td>EPA certified technician required</td>
+    </tr>
+    <tr>
+      <td>System not heating/cooling</td>
+      <td class="pro">PRO</td>
+      <td>After checking filter and thermostat</td>
+    </tr>
+    <tr>
+      <td>Strange noises or smells</td>
+      <td class="pro">PRO</td>
+      <td>Could indicate serious problem</td>
+    </tr>
+  </table>
+
+  <h3>General Repairs</h3>
+  <table>
+    <tr>
+      <th>Task</th>
+      <th>DIY or Pro?</th>
+      <th>Notes</th>
+    </tr>
+    <tr>
+      <td>Patch small drywall holes</td>
+      <td class="diy">DIY</td>
+      <td>Under 6 inches, use spackle or patch kit</td>
+    </tr>
+    <tr>
+      <td>Re-caulk tub/shower</td>
+      <td class="diy">DIY</td>
+      <td>Use mold-resistant silicone</td>
+    </tr>
+    <tr>
+      <td>Fix squeaky hinges</td>
+      <td class="diy">DIY</td>
+      <td>Lubricant usually does it</td>
+    </tr>
+    <tr>
+      <td>Tighten loose handles/knobs</td>
+      <td class="diy">DIY</td>
+      <td>Just needs screwdriver</td>
+    </tr>
+    <tr>
+      <td>Touch-up paint</td>
+      <td class="diy">DIY</td>
+      <td>Keep leftover paint labeled</td>
+    </tr>
+    <tr>
+      <td>Fix running toilet</td>
+      <td class="diy">DIY</td>
+      <td>Usually flapper or fill valve</td>
+    </tr>
+    <tr>
+      <td>Large drywall repair (6+ inches)</td>
+      <td class="depends">Depends</td>
+      <td>DIY possible but pro gives better results</td>
+    </tr>
+    <tr>
+      <td>Door won't close/latch</td>
+      <td class="depends">Depends</td>
+      <td>DIY adjustment or may need pro if frame issue</td>
+    </tr>
+    <tr>
+      <td>Window replacement</td>
+      <td class="pro">PRO</td>
+      <td>Improper install causes energy loss and leaks</td>
+    </tr>
+    <tr>
+      <td>Mold remediation (large area)</td>
+      <td class="pro">PRO</td>
+      <td>Over 10 sq ft requires professional</td>
+    </tr>
+    <tr>
+      <td>Roof repairs</td>
+      <td class="pro">PRO</td>
+      <td>Safety concern and proper repairs critical</td>
+    </tr>
+    <tr>
+      <td>Foundation issues</td>
+      <td class="pro">PRO</td>
+      <td>Structural engineer may be needed</td>
+    </tr>
+  </table>
+
+  <h2>Key Questions Before DIYing</h2>
+  <div class="category category-diy">
+    <h3>Safe to DIY if you can answer YES to ALL:</h3>
+    <ul>
+      <li>Is this task covered in basic home maintenance guides?</li>
+      <li>Do I have (or can I get) the right tools?</li>
+      <li>Am I comfortable with the safety requirements?</li>
+      <li>If I mess up, is it easily reversible?</li>
+      <li>Does this NOT involve gas, high-voltage electricity, or structure?</li>
+    </ul>
+  </div>
+
+  <div class="category category-pro">
+    <h3>Call a Pro if ANY of these apply:</h3>
+    <ul>
+      <li>The task involves gas lines</li>
+      <li>The task involves the electrical panel or new wiring</li>
+      <li>The task affects structural elements</li>
+      <li>Permits are required</li>
+      <li>A mistake could cause injury or major property damage</li>
+      <li>The problem is getting worse despite your efforts</li>
+      <li>You're uncomfortable or uncertain</li>
+    </ul>
+  </div>
+
+</body>
+</html>

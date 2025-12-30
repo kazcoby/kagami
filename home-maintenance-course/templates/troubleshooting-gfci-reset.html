@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Troubleshooting: GFCI Reset</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.4; max-width: 800px; margin: 0 auto; padding: 20px; color: #333; }
+    h1 { color: #2d5a27; text-align: center; margin-bottom: 5px; }
+    .subtitle { text-align: center; color: #666; margin-bottom: 20px; }
+    .info-box { background: #e3f2fd; border-radius: 8px; padding: 15px; margin: 15px 0; }
+    .warning { background: #ffebee; border-left: 4px solid #c62828; padding: 10px 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+    .success { background: #e8f5e9; border-left: 4px solid #2d5a27; padding: 10px 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+    .step-box { background: #f5f5f5; border-radius: 8px; padding: 15px; margin: 10px 0; }
+    .step-number { display: inline-block; background: #1a73e8; color: white; width: 25px; height: 25px; border-radius: 50%; text-align: center; line-height: 25px; margin-right: 10px; font-weight: bold; font-size: 0.9em; }
+    h2 { color: #1a73e8; margin-top: 20px; font-size: 1.2em; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+    ul, ol { padding-left: 20px; margin: 5px 0; }
+    li { margin-bottom: 5px; }
+    .diagram { background: #fff3e0; border-radius: 8px; padding: 15px; margin: 15px 0; text-align: center; }
+    .two-col { display: flex; gap: 20px; }
+    .col { flex: 1; }
+    @media print {
+      body { padding: 10px; font-size: 11pt; }
+    }
+    @media (max-width: 600px) {
+      .two-col { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <h1>TROUBLESHOOTING: GFCI Reset</h1>
+  <p class="subtitle">One-Page Quick Reference Guide</p>
+
+  <div class="info-box">
+    <strong>What is a GFCI?</strong> Ground Fault Circuit Interrupter — a safety device that cuts power in 1/40th of a second if electricity goes somewhere dangerous (like through water or a person).
+  </div>
+
+  <h2>Identifying GFCI Outlets</h2>
+  <div class="diagram">
+    <p><strong>GFCI outlets have two buttons:</strong></p>
+    <p style="font-size: 1.5em; margin: 10px 0;">
+      [TEST] &nbsp; [RESET]
+    </p>
+    <p>TEST button (usually black/darker) | RESET button (usually red, may pop out)</p>
+    <p><em>Found in: bathrooms, kitchens, garages, outdoors, basements, laundry areas</em></p>
+  </div>
+
+  <h2>How to Reset a Tripped GFCI</h2>
+  <div class="step-box">
+    <p><span class="step-number">1</span><strong>Identify what was plugged in</strong> — Unplug that device</p>
+    <p><span class="step-number">2</span><strong>Check for moisture</strong> — Is outlet or device wet? Address first.</p>
+    <p><span class="step-number">3</span><strong>Press RESET button firmly</strong> — Should click and stay in</p>
+    <p><span class="step-number">4</span><strong>Test with different device</strong> — Plug in something you know works</p>
+    <p><span class="step-number">5</span><strong>Test original device elsewhere</strong> — If GFCI trips again with same device, device may be faulty</p>
+  </div>
+
+  <h2>Why GFCIs Trip</h2>
+  <div class="two-col">
+    <div class="col">
+      <div class="step-box">
+        <p><strong>Common Causes:</strong></p>
+        <ul>
+          <li>Moisture in outlet/device</li>
+          <li>Worn appliances (old hair dryers, etc.)</li>
+          <li>Overloaded circuit</li>
+          <li>Worn/old GFCI (10-15 year lifespan)</li>
+          <li>Ground fault in wiring</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col">
+      <div class="step-box">
+        <p><strong>Common Culprits:</strong></p>
+        <ul>
+          <li>Hair dryers / curling irons</li>
+          <li>Space heaters</li>
+          <li>Power tools</li>
+          <li>Appliances with frayed cords</li>
+          <li>Devices used near water</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h2>Monthly GFCI Test (Do This!)</h2>
+  <div class="step-box">
+    <ol>
+      <li>Plug in a lamp or radio</li>
+      <li>Press TEST button — device should turn OFF</li>
+      <li>Press RESET button — device should turn back ON</li>
+      <li>If either step fails → GFCI needs replacement</li>
+    </ol>
+  </div>
+
+  <div class="success">
+    <strong>One GFCI Can Protect Many Outlets!</strong>
+    <p>If a regular outlet has no power, check for tripped GFCIs nearby. A bathroom GFCI might protect outlets in other bathrooms or even the garage. Check ALL GFCIs before assuming a circuit problem.</p>
+  </div>
+
+  <h2>GFCI Won't Reset? Troubleshooting</h2>
+  <div class="step-box">
+    <ul>
+      <li><strong>Button won't stay in:</strong> Unplug ALL devices from that circuit, try again</li>
+      <li><strong>Still won't reset:</strong> Check circuit breaker (may be tripped too)</li>
+      <li><strong>Reset but no power:</strong> GFCI may be worn out and need replacement</li>
+      <li><strong>Check other GFCIs:</strong> One upstream GFCI may control this outlet</li>
+    </ul>
+  </div>
+
+  <div class="warning">
+    <strong>STOP and Call an Electrician If:</strong>
+    <ul>
+      <li>GFCI won't reset at all (keeps popping out)</li>
+      <li>GFCI trips immediately with nothing plugged in</li>
+      <li>Burning smell or scorch marks</li>
+      <li>Outlet feels warm or hot</li>
+      <li>GFCI fails monthly test</li>
+      <li>No GFCI protection in required areas (needs installation)</li>
+    </ul>
+  </div>
+
+  <div class="info-box">
+    <strong>Where GFCIs Are Required:</strong>
+    <ul style="margin: 5px 0;">
+      <li>All bathroom outlets</li>
+      <li>Kitchen outlets near sink</li>
+      <li>Garage outlets</li>
+      <li>Outdoor outlets</li>
+      <li>Basements and crawl spaces</li>
+      <li>Laundry areas</li>
+      <li>Near pools, hot tubs, fountains</li>
+    </ul>
+    <p><em>Renters: If your home lacks GFCIs in these areas, notify landlord in writing.</em></p>
+  </div>
+
+</body>
+</html>
