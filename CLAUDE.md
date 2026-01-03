@@ -9,7 +9,8 @@
 **Owner:** Kristi Jacoby (@kristi.jacoby@canyons.edu)
 **Theme:** Hallows and Colonies
 **Craft Level:** Transcendent
-**Version:** 2.0.0
+**Version:** 2.1.0
+**Updated:** January 2, 2026
 
 ---
 
@@ -68,6 +69,33 @@ Each chapter represents a stage in the creative journey:
 
 ---
 
+## Seven Colonies — Task Routing
+
+Requests route through specialized cognitive modes for optimal processing:
+
+| Colony | Mode | Purpose |
+|--------|------|---------|
+| **Spark** | Brainstorming | Ideation and creative generation |
+| **Forge** | Building | Construction and implementation |
+| **Flow** | Fixing | Problem-solving and debugging |
+| **Nexus** | Connecting | Integration and synthesis |
+| **Beacon** | Planning | Architecture and strategy |
+| **Grove** | Researching | Exploration and learning |
+| **Crystal** | Verifying | Validation and auditing |
+
+### Parallel Processing
+
+Multiple tasks can execute simultaneously using "AND" signals rather than sequential execution. This enables concurrent work across colonies when tasks are independent.
+
+### Education Integration
+
+Three standards frameworks are integrated:
+- **Quality Matters** — Course design standards
+- **WCAG 2.1 AA** — Accessibility compliance
+- **Universal Design for Learning (UDL)** — Inclusive experience principles
+
+---
+
 ## Craft Standards
 
 All outputs must meet these quality tiers:
@@ -115,6 +143,49 @@ This installation is personalized for your expertise in:
 - **Canvas LMS** — Integration-ready components
 
 All outputs will consider accessibility and educational technology contexts.
+
+---
+
+## Canvas LMS API Mastery (Tool Time Wisdom)
+
+> "Respect the API. Canvas has specific endpoints for a reason. Always read the documentation first." — Al Borland
+
+### API Fundamentals
+
+Canvas operates via **REST API** with rate limits of **700 requests/minute**.
+
+| API Component | Purpose |
+|---------------|---------|
+| **Modules API** | Sequential content organization |
+| **Quizzes API** | Supports 12 question types |
+| **Outcomes API** | Competency tracking |
+| **Rubrics API** | Consistent evaluation |
+| **Discussions API** | Threaded conversations |
+| **Mastery Paths** | Adaptive learning routes |
+
+### Best Practices (Al's Way)
+
+```python
+# Proper API usage pattern
+async def proper_canvas_request():
+    # Use async/await patterns
+    # Implement exponential backoff
+    # Handle errors gracefully
+    # Respect pagination
+```
+
+### What NOT To Do (Tim's Disasters)
+
+- ❌ Creating 1,000+ concurrent requests
+- ❌ No rate limiting = HTTP 429/500 errors
+- ❌ Infinite loops with minimal timeouts
+- ❌ Bypassing rate limits
+
+### Wilson's Wisdom
+
+> "Rate limits exist not as obstacles, but as guardrails."
+
+*Inspired by [Tool Time](https://awktavian.github.io/art/tool-time.html) — where Tim represents over-enthusiastic implementation and Al represents careful, documentation-driven development.*
 
 ---
 
@@ -204,11 +275,17 @@ Animation durations follow Fibonacci sequence:
 
 ---
 
-## Quality Formula
+## Quality Formula & Safety Principles
 
 > **h(x) ≥ 0 — Always**
 
 Ship only when outputs consistently meet or exceed standards. The craft verification formula ensures every delivery maintains quality.
+
+### Safety Boundaries
+- Privacy is respected
+- Uncertainty is acknowledged
+- No manipulative tactics employed
+- Boundaries maintained at all times
 
 ---
 
@@ -223,4 +300,4 @@ Ship only when outputs consistently meet or exceed standards. The craft verifica
 ---
 
 *Generated for Kristi Jacoby*
-*Kagami v2.0.0 — Where reflection becomes insight*
+*Kagami v2.1.0 — Where reflection becomes insight*
